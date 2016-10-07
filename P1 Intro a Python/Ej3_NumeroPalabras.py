@@ -41,7 +41,11 @@ def contarPalabrasDeArchivo():
                 dicPalabras[lststrPalabras[i]] = 1
 
     # Se escribe las palabras y sus ocurrencias en un fichero de salida.
-    fsal = open('palabras.txt', 'w')
+    try:
+        fsal = open('palabras.txt', 'w')
+    except:
+        print "No se ha podido generar el archivo de salida"
+        exit()
 
     for clave in dicPalabras:
         fsal.write(str(clave) + ' ' + str(dicPalabras[clave]) + '\n')
