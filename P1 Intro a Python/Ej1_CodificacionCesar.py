@@ -1,36 +1,65 @@
-# -*- coding: utf-8 -*-
 """
-    Práctica 1 - Ejercicio 1
-
+    Practica 1 - Ejercicio 1
+    
     Lorenzo de la Paz Suarez
     Juan Mas Aguilar
-    Elí Emmanuel Linares Romero
-
+    Eli Emmanuel Linares Romero
+    
     Lab 06 Puesto 01
-    Gestion de la Información en la Web - 2016-2017
+    Gestion de la Informacion en la Web - 2016-2017
     Universidad Complutense de Madrid
     Madrid
-
+    
 """
 
 #Ejercicio 1
 
 
 def cesar(txt,desplazarLetra,desplazarPalabra):
-
+   
    texto =  desplazaLetra(txt, desplazarLetra)
-  # txt = desplazaPalabras(txt, desplazarPalabra)
+   print ''.join(texto)
+   texto = desplazaPalabras(texto, desplazarPalabra) 
    print texto
-
-
+   
+   
 def desplazaLetra(txt, num):
-
-    texto = " "
-    for i in range(0, len(txt)):
-        if txt[i].isalpha():
-            if txt[i] == 'x' or txt[i] == 'y' or txt[i] == 'z' or txt[i] == 'X' or txt[i] == 'Y' or txt[i] == 'Z':
-                - (26 - num)
+    
+    texto = []
+    for i in range(0,len(txt)):
+         if txt[i].isalpha():
+            asciiNum = ord(txt[i])
+            movimiento = num % 26
+            nuevaPosicion = asciiNum + movimiento
+            if asciiNum <= 90:
+               if nuevaPosicion > 90:
+                  nuevaPosicion = nuevaPosicion - 26
             else:
-                  texto[i] = txt[i] + num
+               if nuevaPosicion > 122:
+                  nuevaPosicion = nuevaPosicion - 26
+            texto.append(unichr(nuevaPosicion))
+         else:
+            texto.append(txt[i])
+    
+    return ''.join(texto)
 
-            print txt[i]
+def desplazaPalabras(txt, num):
+
+   lista2 = []
+   lista = txt.split()
+   rotacion = num%len(lista)
+
+   for  i in range(len(lista)):
+      nuevaPosicion = i+rotacion
+      if nuevaPosicion >= len(lista):
+         nuevaPosicion = nuevaPosicion - len(lista)
+      lista2.append(lista[nuevaPosicion] + " ")
+
+   return  ''.join(lista2)    
+
+     
+   
+    
+    
+    
+    
