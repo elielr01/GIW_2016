@@ -15,7 +15,7 @@
 
 
 # Ejercicio 2
-# Este ejercicio fue provado con el servidor gratuito de Google: smtp.gmail.com:587
+# Este ejercicio fue probado con el servidor gratuito de Google: smtp.gmail.com:587
 # Para esto se necesita tener una cuenta en gmail con la seguridad de acceso a la cuenta
 #
 
