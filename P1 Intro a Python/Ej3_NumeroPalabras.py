@@ -32,7 +32,7 @@ def contarPalabrasDeArchivo():
         linea = linea.rstrip()
 
         lststrPalabras = linea.split()
-        for i in range(0, len(lststrPalabras)):
+        for i in range(len(lststrPalabras)):
             # Si la palabra ya exste en el diccionario, se le suma 1 ocurrencia
             if lststrPalabras[i] in dicPalabras:
                 dicPalabras[lststrPalabras[i]] = dicPalabras[lststrPalabras[i]] + 1
