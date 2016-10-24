@@ -3,7 +3,7 @@
 
 import json
 
-#PROBLEMAS: ASCII CODE, NO ME LEE EN UTF-8. NO ME CONVIERTE EN INT.MEDIO HECHO EL APARTADO A)
+#PROBLEMAS: ASCII CODE, NO ME LEE EN UTF-8.
 
 def Semaforo():
 
@@ -41,8 +41,37 @@ def Semaforo():
         totalSemaforos += numberOfSemaforos
 
     for clave in diccionario:
-        fsal.write(clave + " " + diccionario[clave]/totalSemaforos)
+        num = float(diccionario[clave])/float(totalSemaforos)
+        try:
+            fsal.write(clave + "," + str(num) + '\n')
+        except:
+            hola = 5;
     fsal.close()
+    try:
+        fsal2 = open('MayorFrecuenciaSemaforos.txt', 'w')
+    except:
+        print "No se ha podido generar el archivo de salida MayorFrecuencia"  
+
+    # a continuacion, algoritmo para almacenar los menores
+    i = 0
+    lista = []
+    menor = i
+    for linea in diccionario:
+        if len(lista) <= 10:
+            lista.append(linea)
+            if(diccionario[linea] < lista[menor]):
+                menor = len(lista) - 1
+        elif(diccionario[linea] < lista[menor]):
+            lista[menor] = linea
+    
+    #recorremos la lista y vamos guardando
+    for linea in lista:
+        try:
+            
+            fsal2.write([linea + " "+ str(diccionario[linea]) + '\n'])
+        except:
+            hola = 2;
+    fsal2.close()
     
 Semaforo()
         
