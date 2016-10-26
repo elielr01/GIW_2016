@@ -1,0 +1,10 @@
+Cuarteles,51		Ocurrencias: 16
+Camino San Rafael,		Ocurrencias: 16
+Calle Emilio Díaz,		Ocurrencias: 14
+Paseo de los Curas,0		Ocurrencias: 14
+Ortega y Gasset,		Ocurrencias: 14
+Av. Obispo Angel Herrera Oria,90		Ocurrencias: 12
+Morales Villarrubia,24		Ocurrencias: 12
+Eugenio Gross,20		Ocurrencias: 12
+Alameda Principal,44		Ocurrencias: 12
+Av. Andalucía,62		Ocurrencias: 12

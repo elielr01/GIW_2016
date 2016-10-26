@@ -1,0 +1,204 @@
+Av.Sor Teresa Prat,52		Frecuencia: 0.00381315538608
+Avd. Obispo Ángel Herrera Oria,65		Frecuencia: 0.00381315538608
+Ntra.Sra.de los Clarines,7		Frecuencia: 0.00571973307912
+Avda. Velázquez,106		Frecuencia: 0.00190657769304
+Avda. Juan Sebastián Elcano,191		Frecuencia: 0.00381315538608
+Av.Sor Teresa Prat,58		Frecuencia: 0.00190657769304
+Av.Europa,77		Frecuencia: 0.0095328884652
+Paseo de los Curas,		Frecuencia: 0.00381315538608
+Av. Obispo Angel Herrera Oria,58		Frecuencia: 0.00571973307912
+Arroyo de los Angeles,15		Frecuencia: 0.00190657769304
+Avenida José Ortega y Gasset,		Frecuencia: 0.00381315538608
+Hilera ,2		Frecuencia: 0.00381315538608
+Virgen de la Fuensanta,68		Frecuencia: 0.00190657769304
+Ortega y Gasset,		Frecuencia: 0.0133460438513
+Hilera ,6		Frecuencia: 0.00571973307912
+Avda. Juan XXIII,69		Frecuencia: 0.00571973307912
+Plaza de la Victoria,		Frecuencia: 0.00571973307912
+Camino San Rafael,		Frecuencia: 0.0152526215443
+Av. Andalucia,42		Frecuencia: 0.00381315538608
+Ayala ,61		Frecuencia: 0.00571973307912
+Av. de la Aurora ,32		Frecuencia: 0.00381315538608
+Pacífico,22		Frecuencia: 0.00571973307912
+Morales Villarrubia,18		Frecuencia: 0.0095328884652
+Cuarteles,51		Frecuencia: 0.0152526215443
+Avenida Moliere,		Frecuencia: 0.00381315538608
+Avda. Salvador Allende,230		Frecuencia: 0.00381315538608
+Atarazanas ,2		Frecuencia: 0.00571973307912
+Plaza Aparejador Federico Bermudez,0		Frecuencia: 0.0095328884652
+Ayala,12		Frecuencia: 0.00571973307912
+Avda. Cervantes,0		Frecuencia: 0.00190657769304
+Paseo de los Curas,0		Frecuencia: 0.0133460438513
+Avda.Barcelona,44		Frecuencia: 0.00571973307912
+Cuarteles,58		Frecuencia: 0.00381315538608
+Alameda de Colón,5		Frecuencia: 0.0095328884652
+Martínez de la Rosa,46		Frecuencia: 0.00762631077216
+Carril de Gamarra,6		Frecuencia: 0.00571973307912
+Av. Manuel Agustin Heredia,34		Frecuencia: 0.00381315538608
+Puente de la Esperanza,0		Frecuencia: 0.00571973307912
+Av. Sor Teresa Prat,64		Frecuencia: 0.00571973307912
+Avda.Salvador Allende,137		Frecuencia: 0.00190657769304
+Gaucín,11		Frecuencia: 0.00381315538608
+Avda. Carlos Haya,33		Frecuencia: 0.00190657769304
+Calle Emilio Díaz,		Frecuencia: 0.0133460438513
+Plaza de Jose Bergamín,0		Frecuencia: 0.00190657769304
+Cortina del Muelle,0		Frecuencia: 0.00190657769304
+Pasillo del Matadero,13		Frecuencia: 0.00381315538608
+Avda. Salvador Allende,80		Frecuencia: 0.00190657769304
+Martínez Maldonado,8		Frecuencia: 0.00571973307912
+Realenga de San Luís,		Frecuencia: 0.00571973307912
+Alameda Principal ,22		Frecuencia: 0.00762631077216
+Avda. Carlos Haya,85		Frecuencia: 0.00190657769304
+Salitre ,13		Frecuencia: 0.00381315538608
+Avd. Salvador Allende,		Frecuencia: 0.0
+Av. Sor Teresa Prat,19		Frecuencia: 0.00571973307912
+Plaza Manuel Azaña,0		Frecuencia: 0.0095328884652
+Cristo de la Epidemia ,75		Frecuencia: 0.00190657769304
+Plaza de Bailén ,0		Frecuencia: 0.0095328884652
+Av.Pintor Joaquin Sorolla,8		Frecuencia: 0.00381315538608
+Avda.Maria Zambrano,8		Frecuencia: 0.00571973307912
+Morales Villarrubia,9		Frecuencia: 0.00381315538608
+Hilera,16		Frecuencia: 0.00762631077216
+Cuarteles,		Frecuencia: 0.00381315538608
+Av. Velázquez,25		Frecuencia: 0.00381315538608
+Pelayo ,12		Frecuencia: 0.00381315538608
+Almería,115		Frecuencia: 0.00381315538608
+Marqués de Ovieco,2		Frecuencia: 0.00762631077216
+Victoria ,0		Frecuencia: 0.00762631077216
+Av de Manuel Agustin Heredia,2		Frecuencia: 0.00381315538608
+Armengual de la Mota,		Frecuencia: 0.00381315538608
+Calle Albeniz,		Frecuencia: 0.00190657769304
+Avda.Juan Sebastián Elcano,91		Frecuencia: 0.00381315538608
+Plaza de la Malagueta,0		Frecuencia: 0.00571973307912
+Hilera,10		Frecuencia: 0.00190657769304
+Cl. Heroe de Sostoa,148		Frecuencia: 0.00571973307912
+Av. Andalucía,62		Frecuencia: 0.0114394661582
+Cno. del Pato,1		Frecuencia: 0.00762631077216
+Avda. Juan Sebastián Elcano,177		Frecuencia: 0.00762631077216
+Cmno.San Rafael,14		Frecuencia: 0.00190657769304
+Carril de Gamarra,14		Frecuencia: 0.00762631077216
+Avda. Gálvez Ginachero,19		Frecuencia: 0.00571973307912
+Paseo Marítimo Antonio Machado,40		Frecuencia: 0.0095328884652
+Avd. Europa,		Frecuencia: 0.00381315538608
+Calle Peinado,		Frecuencia: 0.00190657769304
+Almería,67		Frecuencia: 0.00381315538608
+Av de Canóvas del Castillo ,5		Frecuencia: 0.00381315538608
+Alameda de Capuchinos ,91		Frecuencia: 0.00190657769304
+Av de Andalucía,1		Frecuencia: 0.00190657769304
+Cuarteles ,16		Frecuencia: 0.00571973307912
+Ayala ,1		Frecuencia: 0.00762631077216
+Jovellanos ,49		Frecuencia: 0.00571973307912
+Cancho Pérez,		Frecuencia: 0.00190657769304
+Cno.de los Almendrales,29		Frecuencia: 0.00190657769304
+Alameda Principal,44		Frecuencia: 0.0114394661582
+Paseo de Reding,29		Frecuencia: 0.00190657769304
+Realenga de San Luis,14		Frecuencia: 0.00571973307912
+Camino de Suarez,50		Frecuencia: 0.00190657769304
+Almería,1		Frecuencia: 0.00571973307912
+Av de Andalucía ,6		Frecuencia: 0.00190657769304
+Av de la Aurora ,3		Frecuencia: 0.00381315538608
+Av de la Aurora ,2		Frecuencia: 0.00762631077216
+Paseo del Parque ,0		Frecuencia: 0.00762631077216
+Avda. José Ortega y Gasset,54		Frecuencia: 0.00381315538608
+Alameda Principal ,0		Frecuencia: 0.00571973307912
+Eugenio Gross,20		Frecuencia: 0.0114394661582
+Cno.del Pato,20		Frecuencia: 0.00381315538608
+Almogía,10		Frecuencia: 0.00190657769304
+Emilio Diaz,18		Frecuencia: 0.00190657769304
+Avda. Europa,117		Frecuencia: 0.00762631077216
+Alameda Principal ,12		Frecuencia: 0.0095328884652
+Puente de Armiñán,		Frecuencia: 0.00571973307912
+Avda. Juan Sebastián Elcano,157		Frecuencia: 0.00571973307912
+Camino Colmenar,		Frecuencia: 0.00190657769304
+Paseo de los Tilos,53		Frecuencia: 0.00190657769304
+Av. de Europa ,57		Frecuencia: 0.00381315538608
+Av.Manuel Agustin Heredia,8		Frecuencia: 0.00381315538608
+Avda. Carlos haya,93		Frecuencia: 0.00381315538608
+Cuarteles ,5		Frecuencia: 0.00190657769304
+Av.Arroyo de los Angeles,118		Frecuencia: 0.00381315538608
+Morales Villarrubia,24		Frecuencia: 0.0114394661582
+Santa Elena,2		Frecuencia: 0.00762631077216
+Avda. Velázquez,2		Frecuencia: 0.00381315538608
+Av. Pintor Joaquin Sorolla,70		Frecuencia: 0.00190657769304
+Salitre,4		Frecuencia: 0.00381315538608
+Almería,45		Frecuencia: 0.00381315538608
+Navarro Ledesma,		Frecuencia: 0.00571973307912
+Ctra. Olias,59		Frecuencia: 0.00190657769304
+Hilera,22		Frecuencia: 0.00571973307912
+Av. Andalucia,23		Frecuencia: 0.00381315538608
+Callejones del Perchel ,19		Frecuencia: 0.00190657769304
+Puente de la Aurora,		Frecuencia: 0.00381315538608
+Av. La Paloma,2		Frecuencia: 0.00190657769304
+Ayala ,90		Frecuencia: 0.00762631077216
+La Unión,53		Frecuencia: 0.00571973307912
+Cl. Almería,17		Frecuencia: 0.00381315538608
+Paseo Maritimo Antonio Machado,68		Frecuencia: 0.00190657769304
+Atarazanas,10		Frecuencia: 0.00381315538608
+Paseo de Sancha ,16		Frecuencia: 0.00190657769304
+Avda. Carlos Haya,1		Frecuencia: 0.00190657769304
+Av de Pries ,30		Frecuencia: 0.00190657769304
+Cristo de la Epidemia,95		Frecuencia: 0.00190657769304
+Arroyo de los Ángeles,12		Frecuencia: 0.00381315538608
+Pllo.Santa Isabel,9		Frecuencia: 0.00190657769304
+Av. Sor Teresa Prat,21		Frecuencia: 0.00190657769304
+Abogado Federico Orellana Toledano,2		Frecuencia: 0.00571973307912
+Compás de la Victoria,24		Frecuencia: 0.00381315538608
+Avda.Moliere,11		Frecuencia: 0.00190657769304
+Avda. Salvador Allende,69		Frecuencia: 0.00190657769304
+Avda. Carlos Haya,105		Frecuencia: 0.00571973307912
+Mármoles,29		Frecuencia: 0.00762631077216
+Salitre ,51		Frecuencia: 0.00571973307912
+Paseo Marítimo Pablo Ruiz Picasso,52		Frecuencia: 0.00381315538608
+Av. Obispo Angel Herrera Oria,90		Frecuencia: 0.0114394661582
+Av. Andalucia,18		Frecuencia: 0.00190657769304
+Eugenio Gross,35		Frecuencia: 0.00571973307912
+Alameda de Colón,18		Frecuencia: 0.00190657769304
+Piedras Pardas,		Frecuencia: 0.00190657769304
+Pacifico ,54		Frecuencia: 0.00381315538608
+Bolivia,		Frecuencia: 0.00381315538608
+Av. de Velázquez ,62		Frecuencia: 0.00762631077216
+La Unión,41		Frecuencia: 0.00571973307912
+Bolivia,19		Frecuencia: 0.00190657769304
+Avda.Gálvez Ginachero,25		Frecuencia: 0.00190657769304
+Ayala,22		Frecuencia: 0.00190657769304
+Martínez de la Rosa,		Frecuencia: 0.00762631077216
+Martinez de la Rosa,149		Frecuencia: 0.00571973307912
+Calle Frigiliana,		Frecuencia: 0.00381315538608
+Avda.Ortega y Gasset,72		Frecuencia: 0.00190657769304
+Puente del Carmen,2		Frecuencia: 0.00571973307912
+Mauricio Moro Pareto ,26		Frecuencia: 0.00762631077216
+Avda.Juan Sebastián Elcano,205		Frecuencia: 0.00381315538608
+Arroyo de los Angeles,62		Frecuencia: 0.00762631077216
+Paseo Marítimo Antonio Machado,60		Frecuencia: 0.00762631077216
+Corregidor José Viciana - Virgen de la Cabeza,0		Frecuencia: 0.00571973307912
+Calle Pacífico,		Frecuencia: 0.00285986653956
+Av. de Europa,82		Frecuencia: 0.00381315538608
+Heroe de Sostoa,6		Frecuencia: 0.00381315538608
+Av de Manuel Agustin Heredia ,28		Frecuencia: 0.00381315538608
+Eugenio Gross,40		Frecuencia: 0.00762631077216
+Av. de Velázquez ,70		Frecuencia: 0.00381315538608
+La Unión,71		Frecuencia: 0.00190657769304
+Competa ,7		Frecuencia: 0.00190657769304
+Paseo Maritimo Antonio Machado,44		Frecuencia: 0.00762631077216
+Avda. Juan Sebastián Elcano,137		Frecuencia: 0.0095328884652
+Avda.Carlos Haya,129		Frecuencia: 0.00571973307912
+Explanada de la Estación,		Frecuencia: 0.00762631077216
+Pacífico,34		Frecuencia: 0.00571973307912
+Sondalezas,18		Frecuencia: 0.00381315538608
+Avda. Carlos Haya,13		Frecuencia: 0.00381315538608
+Pacífico,2		Frecuencia: 0.0095328884652
+Cno. de la Térmica,44		Frecuencia: 0.00762631077216
+Avda. Velázquez,40		Frecuencia: 0.00571973307912
+Luis Barahona de Soto,5		Frecuencia: 0.00571973307912
+Cl. Héroe de Sostoa,157		Frecuencia: 0.00762631077216
+Paseo de Sancha,62		Frecuencia: 0.00381315538608
+Avda. Carlos Haya,65		Frecuencia: 0.00571973307912
+La Unión,68		Frecuencia: 0.00190657769304
+Av. de Europa,91		Frecuencia: 0.00190657769304
+Sillita de la Reina,		Frecuencia: 0.00571973307912
+Eugenio Gross,51		Frecuencia: 0.00762631077216
+Avenida Salvador Allende,		Frecuencia: 0.00381315538608
+Plaza de Arriola,16		Frecuencia: 0.00381315538608
+Av. de Europa ,110		Frecuencia: 0.00381315538608
+Paseo del Parque,1		Frecuencia: 0.00190657769304
+Paseo del Parque,0		Frecuencia: 0.00190657769304
