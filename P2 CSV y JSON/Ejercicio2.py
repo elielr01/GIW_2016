@@ -1,4 +1,14 @@
 # -*- coding: utf-8 -*-
+# Practica 2 - Ejercicio 2
+
+# Lorenzo de la Paz Suarez
+# Juan Mas Aguilar
+# Eli Emmanuel Linares Romero
+
+# Lab 06 Puesto 01
+# Gestion de la Informacion en la Web - 2016-2017
+# Universidad Complutense de Madrid
+# Madrid
 
 import json
 
@@ -51,7 +61,7 @@ def Semaforo():
 
     # Ahora se guarda la frecuencia de cada semáforo en un archivo.
     try:
-        fichero_frecuencias = open('frecuenciaSemaforos.txt', 'w')
+        fichero_frecuencias = open('FrecuenciaSemaforos.txt', 'w')
     except:
         print "No se ha podido generar el archivo de salida"
         exit()

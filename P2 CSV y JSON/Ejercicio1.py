@@ -1,3 +1,15 @@
+# -*- coding: utf-8 -*-
+# Practica 2 - Ejercicio 1
+
+# Lorenzo de la Paz Suarez
+# Juan Mas Aguilar
+# Eli Emmanuel Linares Romero
+
+# Lab 06 Puesto 01
+# Gestion de la Informacion en la Web - 2016-2017
+# Universidad Complutense de Madrid
+# Madrid
+
 import csv
 
 def aguaControlada():
@@ -9,7 +21,7 @@ def aguaControlada():
 
     #recorremos el lector
     for linea in lectorAgua:
-        
+
         #quitamos las 2 lineas primeras
         if lectorAgua.line_num > 2:
             linea8 = str(linea[8])
@@ -83,14 +95,11 @@ def infoEmpresas():
     salidaEscrito = csv.writer(archivoWrite)
 
     # ordenamos la lista
-    lista = sorted(diccionario.items(), key=lambda x:x[1])
+    lista = list(reversed(sorted(diccionario.items(), key=lambda x:x[1])))
 
-    #recorremos la lista y vamos guardando
-    i = 0
-    for linea in lista:
-        if(len(lista) - i <= 10):
-            salidaEscrito.writerow(lista[i])
-        i += 1
+    #recorremos la lista y vamos guardando los 10 más contaminantes
+    for linea in lista[:10]:
+        salidaEscrito.writerow(linea)
 
     archivoWrite.close()
 
