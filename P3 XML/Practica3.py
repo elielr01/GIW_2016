@@ -136,9 +136,9 @@ def analizarMonumento(monumento):
 
 
 #Funcion que limpia las etiquetas xml
-def cleanhtml(raw_xml):
+def cleanxml(raw_xml):
   cleanr = re.compile('<.*?>')
-  cleantext = re.sub(cleanr, '', raw_html)
+  cleantext = re.sub(cleanr, '', raw_xml)
 
   if(cleantext.find(u"Más Datos") >= 0):
       cleantext = cleantext[:cleantext.find(u"Más Datos")]
