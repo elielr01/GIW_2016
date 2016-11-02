@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 from xml.etree import ElementTree
 from xml.dom import minidom
+import re
 import urllib
 
-#-----------ERRORES: 1-UTF-8 como siempre jaja. 2- Hay que coger solo una latitud y una longitud
-
+#Clase Monumeto que guarda la informacion del monumento con un método que lo imprime
 class Monumento:
 
     def __init__(self):
@@ -18,13 +18,84 @@ class Monumento:
     def imprimir(self):
         print "Nombre del monumento: " + self.nombre
         print "Latitud: " + self.latitud + " Longitud: " + self.longitud
-        print "Página web asociada:"
-        print "\t" + self.url
-        print "Descripción:"
+        print "Pagina web asociada:"
+        print "\t" + self.url + "\n"
+        print "Descripcion:\n"
         print self.descripcion
 
 
+def main():
 
+    monumentos(abrirArchivo());
+
+def abrirArchivo():
+
+    
+    #Abrimos el archivo
+    try:
+        arch = open("MonumentosZaragoza.xml", "rt")
+    except:
+        print "No se ha podido abrir el archivo MonumentosZaragoza.xml"
+        exit()
+
+    #lo convertimos en arbol
+    arbol = ElementTree.parse(arch)
+    print "Monumentos: "
+
+    lstMonumentos = []
+
+    #Lo guardamos en una lista de monumentos
+    for feature in arbol.iter("Feature"):
+        propertyValues = list(feature)
+        nuevoMonumento = Monumento()
+        for pValue in propertyValues:
+            if pValue.attrib["name"] == "nombre":
+                nuevoMonumento.nombre = pValue.text
+            elif pValue.attrib["name"] == "url":
+                nuevoMonumento.url = pValue.text
+        lstMonumentos.append(nuevoMonumento)
+
+    return lstMonumentos
+
+def monumentos(lstMonumentos):
+
+    #Imprimimos los monumentos
+    imprimirMonumentos(lstMonumentos)
+
+    #Recogemos la respuesta
+    indiceMonumento = raw_input("Introduzca el numero del monumento para ver su informacion:\n")
+
+    #Comprobamos que es un numero entero
+    try:
+        indiceMonumento = int(indiceMonumento) - 1
+    except:
+        print "No se introdujo un numero.\n"
+        exit()
+
+    #Comprobamos que el monumento existe
+    while indiceMonumento < 0 or indiceMonumento >= len(lstMonumentos):
+        print "No existe un monumento con ese numero. Vuelva a intentarlo.\n"
+
+        indiceMonumento = raw_input("Introduzca el numero del monumento para ver su informacion:\n")
+
+        try:
+            indiceMonumento = int(indiceMonumento) - 1
+        except:
+            print "No se introdujo un numero.\n"
+            exit()
+
+    #Si la descripcion está vacia hay que analizar el monumento
+    if lstMonumentos[indiceMonumento].descripcion == "":
+        lstMonumentos[indiceMonumento] = analizarMonumento(lstMonumentos[indiceMonumento])
+
+    #imprime el monumento
+    lstMonumentos[indiceMonumento].imprimir()
+
+    #Si el usuario quiere ver otro, hacemos una llamada recursiva
+    respuesta = raw_input("\nDesea ver otro monumento?(s/n)")
+
+    if (respuesta == "s"):
+        monumentos(lstMonumentos)
 
 def imprimirMonumentos(lstMonumentos):
     i = 1
@@ -51,157 +122,30 @@ def analizarMonumento(monumento):
 
     data = contenido.read().decode("latin1")
 
+    #Cortamos lo que no sirve
     headerDescp = u"<h3>Descripción</h3>"
-    footDescp = u"<h3>Enlaces</h3>"
-    print data
-    raw_input()
-    print "\n\n\n\n\n\n"
 
     data = data[data.find(headerDescp) + len(headerDescp):]
-    print "Lo que sobra despues de substr es:\n" + data
-    raw_input()
+    data = data[:data.find(u"</div>")]
 
-    print "\n\n\n\n\n\n"
-
-    try:
-        from BeautifulSoup import BeautifulSoup
-    except ImportError:
-        from bs4 import BeautifulSoup
-
-    parsed_html = BeautifulSoup(data)
-
-    data = data[:data.find(footDescp)]
-    print "Al final:\n" + data
-    raw_input()
-
+    #limpiamos el texto de etiquetas xml
+    cleantext = cleanxml(data)
+    monumento.descripcion = cleantext
 
     return monumento
 
-def Monumentos():
 
-    #Abrimos el archivo
-    try:
-        arch = open("MonumentosZaragoza.xml", "rt")
-    except:
-        print "No se ha podido abrir el archivo MonumentosZaragoza.xml"
-        exit()
+#Funcion que limpia las etiquetas xml
+def cleanxml(raw_xml):
+  cleanr = re.compile('<.*?>')
+  cleantext = re.sub(cleanr, '', raw_xml)
 
-    #lo convertimos en arbol
-    arbol = ElementTree.parse(arch)
+  if(cleantext.find(u"Más Datos") >= 0):
+      cleantext = cleantext[:cleantext.find(u"Más Datos")]
 
-    print "Monumentos: "
-
-    lstMonumentos = []
-
-    i = 1
-    for feature in arbol.iter("Feature"):
-        propertyValues = list(feature)
-        nuevoMonumento = Monumento()
-        for pValue in propertyValues:
-            if pValue.attrib["name"] == "nombre":
-                nuevoMonumento.nombre = pValue.text
-                print str(i) + ". " + nuevoMonumento.nombre
-                i += 1
-            elif pValue.attrib["name"] == "url":
-                nuevoMonumento.url = pValue.text
-        lstMonumentos.append(nuevoMonumento)
-
-
-    indiceMonumento = raw_input("Introduzca el número del monumento para ver su información:\n")
-
-    try:
-        indiceMonumento = int(indiceMonumento) - 1
-    except:
-        print "No se introdujo un número.\n"
-        exit()
-
-    while indiceMonumento < 0 or indiceMonumento >= len(lstMonumentos):
-        print "No existe un monumento con ese número. Vuelva a intentarlo.\n"
-
-        indiceMonumento = raw_input("Introduzca el número del monumento para ver su información:\n")
-
-        try:
-            indiceMonumento = int(indiceMonumento) - 1
-        except:
-            print "No se introdujo un número.\n"
-            exit()
-
-    if lstMonumentos[indiceMonumento].descripcion == "":
-        lstMonumentos[indiceMonumento] = analizarMonumento(lstMonumentos[indiceMonumento])
-
-    lstMonumentos[indiceMonumento].imprimir()
-
-    respuesta = raw_input("¿Desea ver otro monumento?(s/n)")
-
-    while respuesta == "s":
-
-        imprimirMonumentos(lstMonumentos)
-
-        indiceMonumento = raw_input("Introduzca el número del monumento para ver su información:\n")
-
-        try:
-            indiceMonumento = int(indiceMonumento) - 1
-        except:
-            print "No se introdujo un número.\n"
-            exit()
-
-        while indiceMonumento < 0 or indiceMonumento >= len(lstMonumentos):
-            print "No existe un monumento con ese número. Vuelva a intentarlo.\n"
-
-            indiceMonumento = raw_input("Introduzca el número del monumento para ver su información:\n")
-
-            try:
-                indiceMonumento = int(indiceMonumento) - 1
-            except:
-                print "No se introdujo un número.\n"
-                exit()
-
-        if lstMonumentos[indiceMonumento].descripcion == "":
-            lstMonumentos[indiceMonumento] = analizarMonumento(lstMonumentos[indiceMonumento])
-
-        lstMonumentos[indiceMonumento].imprimir()
-
-        respuesta = raw_input("¿Desea ver otro monumento?(s/n)")
-
-    """
-    #Pedimos monumento
-    monumento = raw_input("Elige un monumento: ")
-
-    #Recorremos el arbol (FIJARSE ALGORITMO)
-    parse = False
-    for nodo in arbol.iter():
-        if(nodo.attrib.get('name') == 'url' and parse == True):
-            url = nodo.text
-            break;
-        if nodo.attrib.get('name') == 'nombre' and nodo.text == monumento:
-            parse = True
-
-    #traza
-    print "URL:   ", url
-
-    #Nos vamos a la web
-    contenido = urllib.urlopen(url)
-    #print contenido.read()
-    #description = contenido.read().encode("utf-8")
-    #aux = "<h3>Descripción</h3>"
-    #aux = aux.encode("utf-8")
-    #aux2 = "<h3>Enlaces</h3>"
-    #aux2 = aux2.encode("utf-8")
-    #description = description.split(aux)[1].split()[0].split(aux2)[0]
-    #print description
-    """
-
-
-def prettifyXML():
-
-    strXML = minidom.parse("MonumentosZaragoza.xml")
-    pretty_xml_as_string = strXML.toprettyxml()
-
-    print pretty_xml_as_string
-    raw_input()
-    print "\n\n"
+  return cleantext
 
 
 
-Monumentos()
-#prettifyXML()
+main()
+
