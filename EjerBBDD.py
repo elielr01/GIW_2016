@@ -14,19 +14,20 @@ def Creacion(cur):
     cur.execute("CREATE TABLE Libros(registro INTEGER PRIMARY KEY AUTOINCREMENT, titulo VARCHAR(35) NOT NULL,escritor VARCHAR(35) NOT NULL,editorial VARCHAR(20) NOT NULL,soporte VARCHAR(35) NOT NULL,fecha_entrada DATE NOT NULL, pais VARCHAR(20) NOT NULL, importe DECIMAL(8,2) NOT NULL, anotaciones BLOB)")
     cur.execute("CREATE TABLE Compradores(registro INTEGER PRIMARY KEY AUTOINCREMENT , nombre VARCHAR(35) NOT NULL, fecha_nacimiento DATE NOT NULL, telefono VARCHAR(10), domicilio  VARCHAR(35), poblacion  VARCHAR(25), anotaciones  TEXT)")
     cur.execute("CREATE TABLE Compras(registro INTEGER PRIMARY KEY AUTOINCREMENT, id_comprador INTEGER(4) NOT NULL, id_libro INTEGER(4) NOT NULL)")
-    #cerramos el cursor
-    cur.close()
 
 
 def Programa():
     conn = sqlite3.connect('Libreria.sqlite3')
     cur = conn.cursor()
     Creacion(cur)
+    CompletarTablas(cur)
+    #cerramos el cursor
+    cur.close()
     conn.commit()
 
 def CompletarTablas(cur):
-    cur.executemany('INSERT INTO Libros (titulo, escritor, editorial, soporte, fecha_entrada,pais,importe) VALUES ( ?, ?) ',listaInfoLibros)
-    cur.executemany('INSERT INTO Compradores (nombre, fecha_nacimiento,telefono, domicilio,poblacion,anotaciones) VALUES ( ?, ?) ',listaInfoCompradores)
+    cur.executemany('INSERT INTO Libros (titulo, escritor, editorial, soporte, fecha_entrada,pais,importe) VALUES ( ?, ?, ? ,?, ? ,?, ?) ',listaInfoLibros)
+    cur.executemany('INSERT INTO Compradores (nombre, fecha_nacimiento,telefono, domicilio,poblacion,anotaciones) VALUES ( ?, ?, ?, ?, ? ,?) ',listaInfoCompradores)
     cur.executemany('INSERT INTO Compras (id_comprador, id_libro) VALUES ( ?, ?) ',listaInfoCompras)
 
 
