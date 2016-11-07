@@ -18,6 +18,7 @@ def Creacion(cur):
 
 def Programa():
     conn = sqlite3.connect('Libreria.sqlite3')
+    conn.text_factory = str
     cur = conn.cursor()
     Creacion(cur)
     CompletarTablas(cur)
