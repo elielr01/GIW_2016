@@ -1,5 +1,17 @@
-﻿import sqlite3
+# -*- coding: utf-8 -*-
+# Practica 4 - Acceso a Bases de Datos
 
+# Lorenzo de la Paz Suarez
+# Juan Mas Aguilar
+# Eli Emmanuel Linares Romero
+
+# Lab 06 Puesto 01
+# Gestion de la Informacion en la Web - 2016-2017
+# Universidad Complutense de Madrid
+# Madrid
+import sqlite3
+
+# Listas utilizadas para poblar las tablas.
 listaInfoLibros = [(1,u'El Quijote', u'Miguel de Cervantes',u'Alianza',u'LIBRO',u'1988-06-11',u'España',12),
                     (2,u'Marina', u'Carlos Ruiz Zafón',u'Edebé',u'CD',u'2003-05-10',u'España',18.95),
                     (3,u'La hoguera de las vanidades',u'Tom Wolfe',u'RBA editores',u'DVD',u'2005-11-09',u'USA',22.25),
@@ -96,7 +108,6 @@ def CompletarTablas(cur):
 
 def PaisesCompras(cur):
 
-    # Esta query obtiene la cantidad de libros por país ordenados por su total de ventas
     query = cur.execute(u"""
         WITH temp AS (
             SELECT pais, COUNT(pais) AS libros_vendidos, SUM(importe) AS total_ventas
@@ -115,6 +126,7 @@ def PaisesCompras(cur):
     # Se imprimen los registros
     for tupla in query:
         for value in tupla:
+            # Se da el formato correcto para imprimir
             if type(value) == unicode:
                 value.encode("utf-8")
             print value, "|",
@@ -137,6 +149,7 @@ def MediaCompradores(cur):
     print u"Población | Media |"
     for tupla in query:
         for value in tupla:
+            # Se da el formato correcto para imprimir
             if type(value) == unicode:
                 value.encode("utf-8")
             elif type(value) == float:
@@ -147,6 +160,7 @@ def MediaCompradores(cur):
     print "=================================\n"
 
 def Actualizar(cur, conn):
+    # Se imprime la tabla antes de realizar la actualización
     print u"Tabla de Compras antes de actualizar:\n"
     print u"(registro, id_comprador, id_libro)"
     query = cur.execute(u"""
@@ -159,10 +173,12 @@ def Actualizar(cur, conn):
 
     print "\n- - - - - - - - - - - - - - - -\n"
 
+    # Se realiza la actualización de los registros
     cur.execute(u"UPDATE Compras set id_comprador=?, id_libro=? WHERE registro=?", [3,3,10])
     cur.execute(u"UPDATE Compras set id_comprador=?, id_libro=? WHERE registro=?", [3,7,11])
     conn.commit()
 
+    # Se imprime la tabla después de realizar la actualización
     print u"Tabla de Compras después de actualizar:\n"
     print u"(registro, id_comprador, id_libro)"
     query = cur.execute(u"""
@@ -187,6 +203,7 @@ def MediaSoporte(cur):
     print u"Soporte | Media |"
     for tupla in query:
         for value in tupla:
+            # Se da el formato correcto para imprimir
             if type(value) == unicode:
                 value.encode("utf-8")
             elif type(value) == float:
@@ -197,6 +214,7 @@ def MediaSoporte(cur):
     print "=================================\n"
 
 def BorrarCompradores(cur, conn):
+    # Se imprime la tabla antes de borrar los compradores
     print u"Tabla de Compradores antes de borrar:\n"
     print u"registro | nombre |"
     query = cur.execute(u"""
@@ -206,6 +224,7 @@ def BorrarCompradores(cur, conn):
 
     for tupla in query:
         for value in tupla:
+            # Se da el formato correcto para imprimir
             if type(value) == unicode:
                 value.encode("utf-8")
             print value, "|",
@@ -213,6 +232,7 @@ def BorrarCompradores(cur, conn):
 
     print "\n- - - - - - - - - - - - - - - -\n"
 
+    # Se borran los compradores que no han comprado nada.
     query = cur.execute(u"""
         DELETE FROM Compradores
         WHERE registro IN (
@@ -230,7 +250,7 @@ def BorrarCompradores(cur, conn):
     for tupla in query:
         print tupla
 
-
+    # Se imprime la tabla después de borrar los compradores
     print u"Tabla de Compradores después de borrar:\n"
     print u"registro | nombre |"
     query = cur.execute(u"""
@@ -240,6 +260,7 @@ def BorrarCompradores(cur, conn):
 
     for tupla in query:
         for value in tupla:
+            # Se da el formato correcto para imprimir
             if type(value) == unicode:
                 value.encode("utf-8")
             print value, "|",
