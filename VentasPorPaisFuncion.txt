@@ -15,7 +15,7 @@ def PaisesCompras(cur):
     ventasPorPais = dict()
     
     for libro in diccionario:
-        cur.execute("SELECT pais FROM Libros WHERE titulo=?", [libro])
+        cur.execute("SELECT pais FROM Libros WHERE registro=?", [libro])
         pais = cur.fetchone()
         #print pais
         if pais in ventasPorPais :
