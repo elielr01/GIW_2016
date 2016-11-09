@@ -1,0 +1,16 @@
+def MedioPrecioLibros(cur):
+    cur.execute(u"SELECT importe FROM 'Libros' WHERE soporte = 'LIBRO'")
+    aux(cur, "LIBRO")       
+    cur.execute(u"SELECT importe FROM 'Libros' WHERE soporte = 'CD'")
+    aux(cur, "CD")
+    cur.execute(u"SELECT importe FROM 'Libros' WHERE soporte = 'DVD'")
+    aux(cur,"DVD")
+
+def aux(cur, tipo):
+    contador = 0
+    acumula = 0
+    for query in cur.fetchall():
+        for data in query:
+            acumula += data
+            contador+=1
+    print "MEDIA PRECIOS DE TIPO ", tipo , ":" , acumula/contador
