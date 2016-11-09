@@ -60,38 +60,6 @@ def CompletarTablas(cur):
     cur.executemany(u'INSERT INTO Compradores (nombre, fecha_nacimiento,telefono, domicilio,poblacion,anotaciones) VALUES ( ?, ?, ?, ?, ? ,?) ',listaInfoCompradores)
     cur.executemany(u'INSERT INTO Compras (id_comprador, id_libro) VALUES ( ?, ?) ',listaInfoCompras)
 
-def PaisesComprasFIRST(cur):
-
-    #Cogemos los libros y sus ventas individuales y los guardamos en un diccionario
-    cur.execute("SELECT comprador,libro FROM Compras")
-    diccionario= dict()
-    for (comprador,libro) in cur.fetchall():
-        if(libro in diccionario):
-            diccionario[libro]+=1
-        else:
-            diccionario[libro] = 1
-
-    #print diccionario
-
-    #Cogemos los paises asociados a cada libro y vamos calculando su numero de ventas total
-    ventasPorPais = dict()
-
-    for libro in diccionario:
-        cur.execute("SELECT pais FROM Libros WHERE registro=?", [libro])
-        pais = cur.fetchone()
-        #print pais
-        if pais in ventasPorPais :
-            ventasPorPais[pais] += diccionario[libro]
-        else:
-            ventasPorPais[pais] = diccionario[libro]
-
-    #Lo ordenamos de forma inversa
-    ventasPorPais.sort()
-    ventasPorPais.reverse()
-
-    #los imprimimos
-    for pais in ventaPorPais:
-        print pais + ": " + ventaPorPais[pais]
 
 def PaisesCompras(cur):
 
