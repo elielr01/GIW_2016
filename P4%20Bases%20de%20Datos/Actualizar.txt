@@ -1,0 +1,3 @@
+def Actualizar(cur)
+    cur.execute("UPDATE Compras set id_comprador=?, id_libro=? WHERE registro=?", [3,3,10])
+    cur.execute("UPDATE Compras set id_comprador=?, id_libro=? WHERE registro=?", [3,7,11])
