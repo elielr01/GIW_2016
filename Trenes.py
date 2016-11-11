@@ -1,4 +1,4 @@
-﻿import urllib
+import urllib
 from BeautifulSoup import *
 
 
@@ -6,7 +6,7 @@ from BeautifulSoup import *
 
 def Main():
     RecogerImagenesWebs()
-    
+    MiniBuscador()
 #-------------------------1º Programa-------------------------
 def RecogerImagenesWebs():
     html = urllib.urlopen('http://trenesytiempos.blogspot.com.es/').read()
@@ -49,7 +49,26 @@ def RecogerImagenesWebs():
 
 #-------------------------2º Programa-------------------------
 
+def MiniBuscador():
 
+    #Cogemos las palabras clave
+    claves = []
+    palabra = raw_input("Introduzca las palabras clave (Intro entre cada una). 0 para salir")
+    
+    while(palabra != 0):
+        claves.append(palabra)
+        palabra = raw_input("Introduzca las palabras clave (Intro entre cada una). 0 para salir")
+
+    #buscamos las palabras
+    html = urrlib.urlopen('http://trenesytiempos.blogspot.com.es/')
+    sopa = BeautifulSoup(html)
+    
+    for palabra in claves    
+        print "Entradas con " + palabra
+        for entrada in sopa.findAll(text=palabra)
+            #al no poder guardar, creo que esto solo imprimiria la palabra (faltaria poder sacar la url de la entrada que contiene esa palabra y eliminar duplicados)
+            print entrada
+        
 
 
 #Llamada
