@@ -1,12 +1,15 @@
-import urllib
+﻿import urllib
+import os
+import re
+
 from BeautifulSoup import *
 
-
-#-------------------------Main-------------------------
+#-------------------------Main--------------------------------
 
 def Main():
+    
     RecogerImagenesWebs()
-    MiniBuscador()
+    Buscador()
 #-------------------------1º Programa-------------------------
 def RecogerImagenesWebs():
     html = urllib.urlopen('http://trenesytiempos.blogspot.com.es/').read()
@@ -14,62 +17,111 @@ def RecogerImagenesWebs():
     etiquetas = sopa('a')
     print "-----Vamos a acceder a las entradas de 2016-----"
     print "---------------Para sacar sus imagenes---------------"
-    print "------------------------------------------------------------------"
+    print "------------Guardando las imagenes en carpetas...-----------"
 
+    #guardo mi dirección dónde se encuentra el archivo
+    place = os.getcwd()
     #Variables para ir acumulando
     contador = 0
-    j=0
+    j,k=0,0
+    
     #recorremos las etiquetas
     for et in etiquetas:
         try:
-            if "http://trenesytiempos.blogspot.com.es/2016_" in et.get('href',None):
-                    contador+=1
-                    print "Pagina web: ",et.get('href',None)
-                    html2 = urllib.urlopen(et.get('href',None)).read()
+            web = et.get('href',None)
+            if "http://trenesytiempos.blogspot.com.es/2016_" in web:
+
+                    #crea la carpeta y me introduzco en ella
+                    os.makedirs("Carpeta"+str(contador))
+                    os.chdir("Carpeta"+str(contador))
+                    print "------------Creamos la carpeta ",str(contador),"...-----------"
+                    #Nos conectamos a la web
+                    html2 = urllib.urlopen(web).read()
                     soup = BeautifulSoup(html2)
-                    etiquetas=soup('a',{"imageanchor":"1"})
-                    for etiquet in etiquetas:
+                    etiquetasL=soup('a',{"imageanchor":"1"})
+
+                    #Recorremos el conjunto de las imagenes
+                    for etiquet in etiquetasL:
                         
+                        #Creo la imagen y guardo sus datos
                         archivo2=open("foto"+str(j)+".jpg","wb")
                         imagen=urllib.urlopen(etiquet.get('href',None))
                         while True:
                             info = imagen.read(100000)
                             if len(info) < 1 : break
                             archivo2.write(info)
-                            archivo2.close()
-                            j=j+1 
+                        archivo2.close()
+                        j=j+1
+                    #Incremento el contador
+                    contador+=1
+                    os.chdir(place)
         except:
-            hol1=6
-            
-        hola=8
+            dummy=0
         
     #Printear      
     print "Hay ",contador,"  webs"
     print "Hay ",j, " fotos"
 
 #-------------------------2º Programa-------------------------
-
-def MiniBuscador():
-
-    #Cogemos las palabras clave
-    claves = []
-    palabra = raw_input("Introduzca las palabras clave (Intro entre cada una). 0 para salir")
+def Buscador():
+    print "------------------------------------------------------------------"
     
-    while(palabra != 0):
-        claves.append(palabra)
-        palabra = raw_input("Introduzca las palabras clave (Intro entre cada una). 0 para salir")
-
-    #buscamos las palabras
-    html = urrlib.urlopen('http://trenesytiempos.blogspot.com.es/')
+    #Pedimos al usuario las palabras clave
+    palabra = raw_input("Introduzca un conjunto de palabras clave para buscarlas: ")
+    print "--------------------------Wait a few seconds...-------------------"
+    listaPalabras = palabra.split()
+    diccionario = dict()
+    
+    #Nos conectamos a la web
+    html = urllib.urlopen('http://trenesytiempos.blogspot.com.es/').read()
     sopa = BeautifulSoup(html)
+    etiquetas = sopa('a')
     
-    for palabra in claves    
-        print "Entradas con " + palabra
-        for entrada in sopa.findAll(text=palabra)
-            #al no poder guardar, creo que esto solo imprimiria la palabra (faltaria poder sacar la url de la entrada que contiene esa palabra y eliminar duplicados)
-            print entrada
+    #recorremos
+    for et in etiquetas:   
+        try:
+            #comprobamos que es una entrada valida
+            web = et.get('href',None)
+            
+            if "http://trenesytiempos.blogspot.com.es/201" in web and web[42] == '_':
+                htmlAux = urllib.urlopen(web).read()
+                sopaAux = BeautifulSoup(htmlAux)
+
+                #recorremos la lista de palabras para ver si está en la web
+                for pal in listaPalabras:
+                    
+                    #vemos si esta la palabra 'pal'
+                    if sopaAux.find(text=re.compile(pal)):
+                        
+                        #La añadimos a la lista de la clave del diccionario
+                        if pal in diccionario:
+                            diccionario[pal].append(web)
+                        else:
+                            diccionario[pal] = []
+                            diccionario[pal].append(web)
+                        
+        except:
+            dummy=0
+            
+    #Vamos a mostrar los resultados
+    print "------------------------------------------------------------------"
+    print "Resultados:"
+
+    #recorremos el diccionario y vamos mostrando las palabras clave junto con sus webs
+    for clave in diccionario:
+        print "Palabra clave: ",clave
         
+        #Exists or not
+        if len(diccionario[clave]) > 0:
+            print "Encontrada en las siguientes webs:"
+        else:
+            print "No se ha encontrado en ninguna web."
+            continue  
+        for url in diccionario[clave]:
+            print url
+        print "-  -   -   -   -   -   -   -    -   -    -    -   -"
 
 
+        
 #Llamada
 Main()
