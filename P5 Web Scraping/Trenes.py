@@ -1,4 +1,16 @@
-﻿import urllib
+# -*- coding: utf-8 -*-
+# Practica 5 - Web Scraping
+
+# Lorenzo de la Paz Suarez
+# Juan Mas Aguilar
+# Eli Emmanuel Linares Romero
+
+# Lab 06 Puesto 01
+# Gestion de la Informacion en la Web - 2016-2017
+# Universidad Complutense de Madrid
+# Madrid﻿
+import urllib
+
 import os
 import re
 
@@ -7,7 +19,7 @@ from BeautifulSoup import *
 #-------------------------Main--------------------------------
 
 def Main():
-    
+
     RecogerImagenesWebs()
     Buscador()
 #-------------------------1º Programa-------------------------
@@ -24,7 +36,7 @@ def RecogerImagenesWebs():
     #Variables para ir acumulando
     contador = 0
     j,k=0,0
-    
+
     #recorremos las etiquetas
     for et in etiquetas:
         try:
@@ -42,7 +54,7 @@ def RecogerImagenesWebs():
 
                     #Recorremos el conjunto de las imagenes
                     for etiquet in etiquetasL:
-                        
+
                         #Creo la imagen y guardo sus datos
                         archivo2=open("foto"+str(j)+".jpg","wb")
                         imagen=urllib.urlopen(etiquet.get('href',None))
@@ -57,52 +69,52 @@ def RecogerImagenesWebs():
                     os.chdir(place)
         except:
             dummy=0
-        
-    #Printear      
+
+    #Printear
     print "Hay ",contador,"  webs"
     print "Hay ",j, " fotos"
 
 #-------------------------2º Programa-------------------------
 def Buscador():
     print "------------------------------------------------------------------"
-    
+
     #Pedimos al usuario las palabras clave
     palabra = raw_input("Introduzca un conjunto de palabras clave para buscarlas: ")
     print "--------------------------Wait a few seconds...-------------------"
     listaPalabras = palabra.split()
     diccionario = dict()
-    
+
     #Nos conectamos a la web
     html = urllib.urlopen('http://trenesytiempos.blogspot.com.es/').read()
     sopa = BeautifulSoup(html)
     etiquetas = sopa('a')
-    
+
     #recorremos
-    for et in etiquetas:   
+    for et in etiquetas:
         try:
             #comprobamos que es una entrada valida
             web = et.get('href',None)
-            
+
             if "http://trenesytiempos.blogspot.com.es/201" in web and web[42] == '_':
                 htmlAux = urllib.urlopen(web).read()
                 sopaAux = BeautifulSoup(htmlAux)
 
                 #recorremos la lista de palabras para ver si está en la web
                 for pal in listaPalabras:
-                    
+
                     #vemos si esta la palabra 'pal'
                     if sopaAux.find(text=re.compile(pal)):
-                        
+
                         #La añadimos a la lista de la clave del diccionario
                         if pal in diccionario:
                             diccionario[pal].append(web)
                         else:
                             diccionario[pal] = []
                             diccionario[pal].append(web)
-                        
+
         except:
             dummy=0
-            
+
     #Vamos a mostrar los resultados
     print "------------------------------------------------------------------"
     print "Resultados:"
@@ -110,18 +122,18 @@ def Buscador():
     #recorremos el diccionario y vamos mostrando las palabras clave junto con sus webs
     for clave in diccionario:
         print "Palabra clave: ",clave
-        
+
         #Exists or not
         if len(diccionario[clave]) > 0:
             print "Encontrada en las siguientes webs:"
         else:
             print "No se ha encontrado en ninguna web."
-            continue  
+            continue
         for url in diccionario[clave]:
             print url
         print "-  -   -   -   -   -   -   -    -   -    -    -   -"
 
 
-        
+
 #Llamada
 Main()
