@@ -161,11 +161,60 @@ def delete():
     user_name = request.query.name
     return template('deleteItemView.tpl',id=user_id, name = user_name)
 
+@app.post('/delete')
+def delete():
+    user_id = request.forms.get('id')
+    user_name = request.forms.get('name')
+    
+    itemName = request.forms.get('itemName')
+    itemCategory = request.forms.get('itemCategory')
+    
+    # Se intenta realizar la eliminación
+    db = sqlite3.connect(u"database.sqlite3")
+    cur = db.cursor()
+    cur.execute(u"""
+        DELETE FROM Contenidos WHERE nameItem = ? and ItemType=? """,[itemName, itemCategory])
+    
+    #Comprobamos que el elemento existe
+    if (len(cur.fetchall()) > 0):
+        cur.close()
+        return template("deleteItemIncorrectView.tpl", id=user_id, name=user_name)
+
+    cur.close()
+    db.commit()
+    return template('deleteItemSuccessful.tpl',id=user_id, name = user_name)
+
 @app.route('/modify')
 def modify():
     user_id = request.query.id
     user_name = request.query.name
     return template('modifyItemView.tpl',id=user_id, name = user_name)
+
+@app.post('/modify')
+def modify():
+    user_id = request.forms.get('id')
+    user_name = request.forms.get('name')
+    
+    itemName = request.forms.get('itemName')
+    itemCategory = request.forms.get('itemCategory')
+    quantity = request.forms.get('quantity')
+    description = request.forms.get('description')
+    date = datetime.now()
+    
+    # Modify
+    db = sqlite3.connect(u"database.sqlite3")
+    cur = db.cursor()
+    cur.execute(u"""
+        DELETE FROM Contenidos WHERE nameItem = ? and itemType=? """,[itemName, itemCategory])
+    
+    #Comprobamos que el elemento existe
+    if (len(cur.fetchall()) <= 0):
+        cur.close()
+        return template("modifyItemIncorrectView.tpl", id=user_id, name=user_name)  ##HACER LA VISTA
+
+    cur.close()
+    db.commit() #CREAR VISTA
+    return template('modifyItemSuccesful.tpl',id=user_id, name = user_name)
 
 
 
