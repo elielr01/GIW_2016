@@ -1,7 +1,7 @@
 <font color="#FF0000"> Can't do sign up. Try again </font>
 <h1>Sign Up</h1>
 
-<form action="do_registration" method="post">
+<form action="signUp" method="post">
   <table>
     <tr>
       <td>
@@ -25,6 +25,16 @@
     <tr>
       <td>
           Confirm password: <input name="confirm_password" type="password">
+      </td>
+    </tr>
+    <tr>
+      <td>
+          Email: <input name="email" type="text">
+      </td>
+    </tr>
+    <tr>
+      <td>
+          Confirm email: <input name="confirm_email" type="text">
       </td>
     </tr>
   </table>
