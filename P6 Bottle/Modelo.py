@@ -28,7 +28,7 @@ def Modelo():
             user_id INTEGER AUTOINCREMET PRIMARY KEY NOT NULL,
             firstName VARCHAR(60) NOT NULL,
             lastName VARCHAR(60) NOT NULL,
-            username VARCHAR(60) NOT NULL,
+            username VARCHAR(60) NOT NULL UNIQUE,
             password VARCHAR(60) NOT NULL,
             email VARCHAR(60) NOT NULL
             )""")
