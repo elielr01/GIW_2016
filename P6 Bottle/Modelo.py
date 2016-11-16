@@ -12,20 +12,18 @@
 
 import sqlite3
 
-def Modelo():  
-    #Usuarios    
-    conn = sqlite3.connect(u"databases.sqlite3")
+def Modelo():
+    dropTables()
+
+    #Usuarios
+    conn = sqlite3.connect(u"database.sqlite3")
     conn.text_factory = unicode
     cur = conn.cursor()
-
-    #Borramos si existe previamente la tabla
-    cur.execute(u"DROP TABLE IF EXISTS Usuario")
-    cur.execute(u"DROP TABLE IF EXISTS Contenidos")
 
     #Creamos las tablas
     cur.execute(u"""
         CREATE TABLE IF NOT EXISTS 'User' (
-            user_id INTEGER AUTOINCREMET PRIMARY KEY NOT NULL,
+            user_id INTEGER PRIMARY KEY,
             firstName VARCHAR(60) NOT NULL,
             lastName VARCHAR(60) NOT NULL,
             username VARCHAR(60) NOT NULL UNIQUE,
@@ -35,7 +33,7 @@ def Modelo():
 
     cur.execute(u"""
         CREATE TABLE IF NOT EXISTS 'Contenidos' (
-            registro INTEGER(4) AUTOINCREMET PRIMARY KEY NOT NULL UNIQUE,
+            registro INTEGER PRIMARY KEY,
             nameItem VARCHAR(35) NOT NULL DEFAULT '',
             ItemType VARCHAR(35) NOT NULL DEFAULT '',
             fecha_entrada DATE NOT NULL DEFAULT '0000-00-00' UNIQUE,
@@ -47,13 +45,20 @@ def Modelo():
     #Actualizamos el cursor
     conn.commit()
 
-def dropTables(dn):
+def dropTables():
+
+    db = sqlite3.connect(u"database.sqlite3")
+    cur = db.cursor()
+
+
     # Se crea el cursor para ejecutar queries
     cur = db.cursor()
 
     cur.execute(u"DROP TABLE IF EXISTS User")
+    cur.execute(u"DROP TABLE IF EXISTS Contenidos")
 
     # Se cierra el cursor y se actualiza la base de datos.
     cur.close()
     db.commit()
 
+Modelo()

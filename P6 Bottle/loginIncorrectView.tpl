@@ -7,7 +7,7 @@
 
 <body>
   <font color="#FF0000"> Can't do login. Try again </font>
-  <h1>Welcome!</h1>
+  <h1>Log In</h1>
 
   <form action="login" method="post">
     Username: <input name="user" type="text" />

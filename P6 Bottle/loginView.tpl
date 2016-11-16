@@ -6,7 +6,7 @@
 </head>
 
 <body>
-  <h1>Welcome!</h1>
+  <h1>Log In</h1>
 
   <form action="login" method="post">
     Username: <input name="user" type="text" />

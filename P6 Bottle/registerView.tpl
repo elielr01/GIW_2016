@@ -21,7 +21,7 @@
       </tr>
       <tr>
         <td>
-            Username: <input name="user" type="text">
+            Username: <input name="username" type="text">
         </td>
       </tr>
       <tr>
@@ -46,6 +46,9 @@
       </tr>
     </table>
     <input value="Sign up" type="submit">
+  </form>
+  <form action="login">
+    <input value="Back to login" type="submit">
   </form>
 </body>
 </html>
