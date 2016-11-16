@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sqlite3
 
+
 def main():
     # Se inicializa la base de datos
     db = sqlite3.connect(u"inventory.sqlite3")
@@ -20,16 +21,7 @@ def createsDataBase(db):
     cur = db.cursor()
 
     cur.execute(u"""
-        CREATES TABLE IF NOT EXISTS 'User' (
-            user_id INTEGER AUTOINCREMET PRIMARY KEY NOT NULL,
-            firstName VARCHAR(60) NOT NULL,
-            lastName VARCHAR(60) NOT NULL,
-            username VARCHAR(60) NOT NULL,
-            password VARCHAR(60) NOT NULL
-            )""")
-
-    cur.execute(u"""
-        CREATES TABLE IF NOT EXISTS 'User' (
+        CREATE TABLE IF NOT EXISTS 'User' (
             user_id INTEGER AUTOINCREMET PRIMARY KEY NOT NULL,
             firstName VARCHAR(60) NOT NULL,
             lastName VARCHAR(60) NOT NULL,
@@ -52,3 +44,5 @@ def dropTables(dn):
     # Se cierra el cursor y se actualiza la base de datos.
     cur.close()
     db.commit()
+
+main()
