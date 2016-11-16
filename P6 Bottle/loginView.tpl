@@ -1,4 +1,4 @@
-<h1>Bienvenido!</h1>
+<h1>Welcome!</h1>
 
 <form action="do_login" method="post">
   Username: <input name="username" type="text" />
@@ -6,4 +6,7 @@
   <input value="Login" type="submit" />
 </form>
 
-<p>No te has registrado?</p>
+<p>No account?</p>
+<form action="signUp">
+  <input value="Sign up" type="submit">
+</form>
