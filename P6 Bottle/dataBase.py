@@ -28,6 +28,13 @@ def createsDataBase(db):
             username VARCHAR(60) NOT NULL,
             password VARCHAR(60) NOT NULL
             )""")
+    cur.execute(u"""
+        CREATE TABLE IF NOT EXISTS 'Content' (
+            content_id INTEGER AUTOINCREMET PRIMARY KEY NOT NULL,
+            name VARCHAR(60) NOT NULL,
+            description VARCHAR(60) NOT NULL,
+            category VARCHAR(60) NOT NULL
+            )""")
 
 
 

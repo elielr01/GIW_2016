@@ -2,9 +2,9 @@
 from bottle import *
 from BeautifulSoup import *
 
-@route('/hola')
+@route('/login')
+def login():
+    
 
-def hola():
-    return "<h1>Hello World!</h1>"
 
 run(host='0.0.0.0', port = 8080)
