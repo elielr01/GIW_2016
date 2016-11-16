@@ -1,4 +1,4 @@
-<font color="#FF0000"> Can't do login. Try again </font>
+<font color="#FF0000"> Can't do sign up. Try again </font>
 <h1>Sign Up</h1>
 
 <form action="do_registration" method="post">
