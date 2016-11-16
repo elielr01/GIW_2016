@@ -34,7 +34,7 @@ def do_logIn():
     if (len(cur.fetchall()) == 0):
         return template("loginIncorrectView.tpl")
     #else:
-        #return template("main.tpl")
+        #return template("index.tpl")
 
     
 @route('/signUp')
