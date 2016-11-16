@@ -14,7 +14,7 @@
 
 
 import sqlite3
-from bottle import rute, run, templates
+from bottle import route, run, template
 
 @route('/login')
 def login():
@@ -37,13 +37,13 @@ def do_logIn():
         #return template("main.tpl")
 
     
-@route('/signup')
+@route('/signUp')
 def signUp():
     output = template('registerView.tpl')
     return output
 
     
-@route('/signup', method='POST')
+@route('/signUp', method='POST')
 def do_signUp():
 
     firstname = request.forms.get('firstname')
