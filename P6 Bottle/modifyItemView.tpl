@@ -11,7 +11,7 @@
   </header>
 
   <form action="modify" method="post">
-  <b>Only modify the fields which have been filled</b>
+  <b>Only modify the fields which have been filled (nameItem doesn't modify)</b>
     <p>Item Name: <input name="itemName" type="text"></p>
     <p>Item Category: <input name="itemCategory" type="text"></p>
     <p>Quantity: <input name="quantity" type="text"></p>

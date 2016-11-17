@@ -34,8 +34,8 @@ def Modelo():
     cur.execute(u"""
         CREATE TABLE IF NOT EXISTS 'Contenidos' (
             registro INTEGER PRIMARY KEY,
-            nameItem VARCHAR(35) NOT NULL DEFAULT '',
-            ItemType VARCHAR(35) NOT NULL DEFAULT '',
+            nameItem VARCHAR(35) NOT NULL DEFAULT '' UNIQUE,
+            itemType VARCHAR(35) NOT NULL DEFAULT '',
             fecha_entrada DATE NOT NULL DEFAULT '0000-00-00' UNIQUE,
             numberOfItems INTEGER(4) NOT NULL DEFAULT 0,
             descripcion BLOB

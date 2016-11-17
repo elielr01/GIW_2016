@@ -147,7 +147,7 @@ def add():
     cur = db.cursor()
 
     cur.execute(u"""
-        INSERT INTO Contenidos (nameItem, ItemType, fecha_entrada, numberOfItems, descripcion)
+        INSERT INTO Contenidos (nameItem, itemType, fecha_entrada, numberOfItems, descripcion)
         VALUES (?,?,?, ?, ?)""",
         [itemName, itemCategory, date, quantity, description])
 
@@ -168,12 +168,16 @@ def delete():
     
     itemName = request.forms.get('itemName')
     itemCategory = request.forms.get('itemCategory')
+
+    # Si algún campo NOT NULL está vacío se pregunta de nuevo el item
+    if (itemName == '' or itemCategory == ''):
+        return template('deleteItemIncorrectView.tpl', id=user_id, name=user_name)
     
     # Se intenta realizar la eliminación
     db = sqlite3.connect(u"database.sqlite3")
     cur = db.cursor()
     cur.execute(u"""
-        DELETE FROM Contenidos WHERE nameItem = ? and ItemType=? """,[itemName, itemCategory])
+        DELETE FROM Contenidos WHERE nameItem = ? and itemType=? """,[itemName, itemCategory])
     
     #Comprobamos que el elemento existe
     if (len(cur.fetchall()) > 0):
@@ -200,20 +204,25 @@ def modify():
     quantity = request.forms.get('quantity')
     description = request.forms.get('description')
     date = datetime.now()
+
+    #Si algún campo NOT NULL está vacío se pregunta de nuevo el item
+    if (itemName == '' or itemCategory == ''):
+        print "He"
+        return template('modifyItemIncorrectView.tpl', id=user_id, name=user_name)
     
     # Modify
     db = sqlite3.connect(u"database.sqlite3")
     cur = db.cursor()
     cur.execute(u"""
-        DELETE FROM Contenidos WHERE nameItem = ? and itemType=? """,[itemName, itemCategory])
+        UPDATE Contenidos SET itemType = ?,numberOfItems = ?,descripcion = ? WHERE nameItem = ?""",[itemCategory,quantity,description, itemName])
     
     #Comprobamos que el elemento existe
-    if (len(cur.fetchall()) <= 0):
+    if (len(cur.fetchall()) > 0):
         cur.close()
-        return template("modifyItemIncorrectView.tpl", id=user_id, name=user_name)  ##HACER LA VISTA
+        return template("modifyItemIncorrectView.tpl", id=user_id, name=user_name)  
 
     cur.close()
-    db.commit() #CREAR VISTA
+    db.commit() 
     return template('modifyItemSuccesful.tpl',id=user_id, name = user_name)
 
 
