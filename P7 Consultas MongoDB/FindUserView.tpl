@@ -6,13 +6,20 @@
 </head>
 
 <body>
-  <h1>Information User</h1>
-  <ul value="{{username}}">
-  <li>
-  <name="UserName" value="{{username}}" />
-  <li>
-  <li>
-  <li>
+  <h1>Information User: {{doc['_id']}} </h1>
+  <ul>
+    %for row in doc:
+		%if isinstance(row, dict):
+			%for col in row:
+			      <li>
+		  {{doc[row][col]}}
+		        </li>
+				%end
+		%else:
+			<li>
+			{{doc[row]}}
+			</li>
+    %end 
   </ul>
 </body>
 </html>
