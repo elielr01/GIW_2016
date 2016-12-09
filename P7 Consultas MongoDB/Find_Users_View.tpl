@@ -36,7 +36,7 @@
     </tr>
 	%for user in data:
       <tr>
-          <td class="block">{{user['name']}}</td>
+          <td class="block">{{user['_id']}}</td>
           <td class="block">{{user['email']}}</td>
           <td class="block">{{user['webpage']}}</td>
           <td class="block">{{user['credit_card']['number']}}{{user['credit_card']['expire']['year']}}{{user['credit_card']['expire']['month']}}</td>
