@@ -26,9 +26,9 @@ def find_user():
     user_name = request.query.username
     doc = c.find_one({'_id':user_name})
     if(doc is not None):    
-        return template('FindUserView.tpl', doc=doc)
+        return template('Find_User_View.tpl', doc=doc)
     else:
-        return template('FailFindUserView.tpl', user_name = user_name)
+        return template('Fail_Find_User_View.tpl', user_name = user_name)
 
 
 @get('/find_users')
@@ -36,7 +36,40 @@ def find_users():
     # http://localhost:8080/find_users?name=Luz
     # http://localhost:8080/find_users?name=Luz&surname=Romero
     # http://localhost:8080/find_users?name=Luz&food=hotdog
-    pass
+    mongoclient = MongoClient()
+    db = mongoclient['giw']
+    c = db['usuarios']
+    nombre = request.query.name
+    apellido = request.query.surname
+    cumpleanos = request.query.birthday
+    if len(nombre) == 0 and len(apellido) ==0 and len(cumpleanos) == 0 :
+        return template('Fail_Find_Users_View.tpl', user_name = "Not user ")
+    elif len(nombre) == 0 and len(apellido) !=0 and len(cumpleanos) != 0:
+        users = c.find({"surname":apellido, "birthdate":cumpleanos})
+        print "Traza1"
+    elif len(nombre) != 0 and len(apellido) ==0 and len(cumpleanos) == 0:
+        users = c.find({"name":nombre})
+        print "Traza2"
+    elif len(nombre) == 0 and len(apellido) !=0 and len(cumpleanos) == 0:
+        users = c.find({"surname":apellido})
+        print "Traza3"
+    elif len(nombre) == 0 and len(apellido) ==0 and len(cumpleanos) != 0:
+        users = c.find({"birthdate":cumpleanos})
+        print "Traza4"
+    elif len(nombre) != 0 and len(apellido) ==0 and len(cumpleanos) != 0:
+        users = c.find({"name":nombre,"birthdate":cumpleanos})
+        print "Traza5"
+    elif len(nombre) != 0 and len(apellido) !=0 and len(cumpleanos) == 0:
+        print "Traza6"
+        users = c.find({"name":nombre,"surname":apellido}) 
+    else:
+        users = c.find({"name":nombre,"surname":apellido,"birthdate":cumpleanos})
+        print "Traza7"
+        
+    if(users is not None):    
+        return template('Find_Users_View.tpl', data=users)
+    else:
+        return template('Fail_Find_Users_View.tpl', user_name = nombre)
         
         
 @get('/find_users_or')
