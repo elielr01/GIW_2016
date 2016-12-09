@@ -7,8 +7,12 @@
 
 <body>
   <h1>Information User</h1>
-  <ul>
-  <input name="UserName" value="{{username}}" />
+  <ul value="{{username}}">
+  <li>
+  <name="UserName" value="{{username}}" />
+  <li>
+  <li>
+  <li>
   </ul>
 </body>
 </html>

@@ -15,19 +15,21 @@
 # Madrid
 # Consultas MongoDB 
 from pymongo import MongoClient
-
+from bottle import *
 
 @get('/find_user')
 def find_user():
     # http://localhost:8080/find_user?username=burgoscarla
     mongoclient = MongoClient()
-    db = mongoclient['usuarios']
+    db = mongoclient['giw']
     c = db['usuarios']
+    username = request.query.name;
     doc = c.find_one({'_id':username})
-    if(doc != NULL):
-        return template('FindUserView.tpl', id=username)
+    print doc
+    if(type(doc) is not None):
+        return template('FindUserView.tpl', username=username)
     else:
-        return template('FailFindUserView.tpl', id = username)
+        return template('FailFindUserView.tpl', username = username)
 
 @get('/find_users')
 def find_users():
