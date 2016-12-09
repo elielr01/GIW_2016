@@ -24,12 +24,11 @@ def find_user():
     db = mongoclient['giw']
     c = db['usuarios']
     user_name = request.query.username
-    #user_name = "burgoscarla"
     doc = c.find_one({'_id':user_name})
-    if(doc is not None):
+    if(doc is not None):    
         return template('FindUserView.tpl', doc=doc)
     else:
-        return template('FailFindUserView.tpl', doc = doc)
+        return template('FailFindUserView.tpl', user_name = user_name)
 
 
 @get('/find_users')
