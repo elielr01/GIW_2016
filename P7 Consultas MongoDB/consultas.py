@@ -76,27 +76,52 @@ def find_users():
         
     #dependiendo de si existen usuarios con tales parametros
     if(users is not None):    
-        return template('Find_Users_View.tpl', data=users)
+        return template('Find_User_View.tpl', data=users)
     else:
-        return template('Fail_Find_Users_View.tpl', user_name = nombre)
-        
+        return template('Fail_Find_Users_View.tpl', user_name = nombre)     
         
 @get('/find_users_or')
 def find_users_or():
     # http://localhost:8080/find_users_or?name=Luz&surname=Corral
-    pass
-       
+    
+    #Recojo los parametros de la url
+    nombre = request.query.name
+    apellido = request.query.surname
+    cumpleanos = request.query.birthday
+
+    if len(nombre) != 0:
+        users = c.find({"name":nombre})
+
+    if len(apellido) != 0:
+        users = users.append(c.find({"surname":apellido}))
+                             
+    if len(cumpleanos) != 0:
+        users = users.append(c.find({"birthday": cumpleanos}))
+
+    if (users is None or (len(nombre) == 0 and len(apellido) ==0 and len(cumpleanos) == 0)):
+        return template('Fail_Find_Users_View.tpl', user_name = nombre)
+    else:
+        return template('Find_User_View.tpl', data=users)     
                
 @get('/find_like')
 def find_like():
     # http://localhost:8080/find_like?like=football
-    pass
 
 
 @get('/find_country')
 def find_country():
     # http://localhost:8080/find_country?country=Irlanda
-    pass
+    #recojo el username
+    pais = request.query.country
+
+    #encuentro el primer usuario con ese username
+    users = c.find({'country':country})
+
+    #dependiendo de si existe el usuario
+    if(users is not None):    
+        return template('Find_User_View.tpl',data=users)
+    else:
+        return template('Fail_Find_User_View.tpl', country=pais)
     
     
 @get('/find_email_birthdate')
