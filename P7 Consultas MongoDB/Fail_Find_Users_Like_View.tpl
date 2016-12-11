@@ -6,6 +6,6 @@
 </head>
 
 <body>
-  <h1>Not Found User called {{user_name}}</h1>
+  <h1>Not Found User with '{{like}}' as hobby </h1>
 </body>
 </html>
