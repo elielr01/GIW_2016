@@ -94,7 +94,7 @@ def find_users_or():
         return template('Fail_Find_Users_View.tpl', user_name = "Not user ")
 
     elif len(nombre) == 0 and len(apellido) !=0 and len(cumpleanos) != 0:
-        users = c.find({"surname":apellido},{"birthdate":cumpleanos})
+        users = c.find({ "$or": [{"surname":apellido},{"birthdate":cumpleanos}] } )
         
     elif len(nombre) != 0 and len(apellido) ==0 and len(cumpleanos) == 0:
         users = c.find({"name":nombre})
@@ -106,13 +106,13 @@ def find_users_or():
         users = c.find({"birthdate":cumpleanos})
        
     elif len(nombre) != 0 and len(apellido) ==0 and len(cumpleanos) != 0:
-        users = c.find({"name":nombre} or {"birthdate":cumpleanos})
+        users = c.find( { "$or": [{"name":nombre},{"birthdate":cumpleanos}] } )
      
     elif len(nombre) != 0 and len(apellido) !=0 and len(cumpleanos) == 0:
-        users = c.find({ '$or': [{"name":nombre},{"surname":apellido} ] } )
+        users = c.find({ "$or" : [{"name":nombre},{"surname":apellido} ] } )
         
     else:
-        users = c.find({"name":nombre} or {"surname":apellido} or {"birthdate":cumpleanos})
+        users = c.find({ "$or" : [{"name":nombre},{"surname":apellido},{"birthdate":cumpleanos}] })
 
     if (users.count() == 0):
         return template('Fail_Find_Users_View.tpl', user_name = nombre)
