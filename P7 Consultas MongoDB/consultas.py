@@ -210,7 +210,32 @@ def email_birthdate():
 @get('/find_country_likes_limit_sorted')
 def find_country_likes_limit_sorted():
     # http://localhost:8080/find_country_likes_limit_sorted?country=Irlanda&likes=movies,animals&limit=4&ord=asc
-    pass
+
+    #Se revisa que todos los argumentos sean válidos
+    invalid_arguments = []
+    for parameter in request.query:
+        if parameter != "country" and parameter != "likes" and parameter != "limit" and parameter != "ord":
+            invalid_arguments.append(parameter)
+
+
+    #Si hay argumentos invalidos se regresa una vista que lo indique
+    if len(invalid_arguments) > 0 or len(request.query) == 0:
+        return template('Invalid_Find_Users_View.tpl', invalid_arguments = invalid_arguments)
+
+    #Se obtienen los parametros
+    country = request.query.country
+    likes = request.query.likes.split(",")
+    limit = int(request.query.limit)
+
+    ord_str = request.query.ord
+    if ord_str == "asc":
+        order = 1
+    else:
+        order = -1
+
+    users = c.find({"likes":{"$in":likes}, "address.country":country}).sort("birthdate", order).limit(limit)
+
+    return template('Find_Users_View.tpl',data=users)
 
 
 if __name__ == "__main__":
