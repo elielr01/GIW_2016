@@ -187,9 +187,24 @@ def find_country():
 def email_birthdate():
     # http://localhost:8080/find_email_birthdate?from=1973-01-01&to=1990-12-31
 
-    
+    #Se revisa que todos los argumentos sean válidos
+    invalid_arguments = []
+    for parameter in request.query:
+        if parameter != "from" and parameter != "to":
+            invalid_arguments.append(parameter)
 
-    pass
+
+    #Si hay argumentos invalidos se regresa una vista que lo indique
+    if len(invalid_arguments) > 0 or len(request.query) == 0:
+        return template('Invalid_Find_Users_View.tpl', invalid_arguments = invalid_arguments)
+
+    #Se obtienen los parametros
+    from_date = request.query["from"]
+    to_date = request.query.to
+
+    users = c.find({"birthdate":{"$gte":from_date, "$lte":to_date}}).sort([("birthdate", 1), ("_id", 1)])
+
+    return template('Find_Email_Birthdate.tpl',data=users)
 
 
 @get('/find_country_likes_limit_sorted')
