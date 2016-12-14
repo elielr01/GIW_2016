@@ -20,7 +20,8 @@
   <header>
     <h2>Show Users</h2>
   </header>
-<PRE> Número de elementos encontrados: {{data.count()}}</PRE>
+<PRE> Elements found: {{data.count()}}</PRE>
+% if data.count() > 0:
   <table>
     <tr>
       <th class="block">UserName</th>
@@ -39,20 +40,28 @@
           <td class="block">{{user['_id']}}</td>
            <td class="block">{{user['email']}}</td>
            <td class="block">{{user['webpage']}}</td>
-          <td class="block">{{user['credit_card']['number']}}{{user['credit_card']['expire']['year']}}{{user['credit_card']['expire']['month']}}</td>
+          <td class="block">
+            <p>Number: {{user['credit_card']['number']}}</p>
+            <p>Expires: {{user['credit_card']['expire']['month']}}/{{user['credit_card']['expire']['year']}}</p>
+          </td>
           <td class="block">{{user['password']}}</td>
           <td class="block">{{user['name']}}</td>
           <td class="block">{{user['surname']}}</td>
-          <td class="block">{{user['address']['country']}}{{user['address']['zip']}}{{user['address']['street']}}
-          <td class="block"> 
-		  <ul>
-			%for like in user['likes']:
-			<li>
-				{{like}} 
-			</li>
-			%end 
-		</ul>  
-		 </td>
+          <td class="block">
+            <p>Street: {{user['address']['street']}}</p>
+            <p>Number: {{user['address']['num']}}</p>
+            <p>Country: {{user['address']['country']}}</p>
+            <p>Zip: {{user['address']['zip']}}</p>
+          </td>
+          <td class="block">
+	          <ul>
+              %for like in user['likes']:
+                <li>
+                  {{like}}
+                </li>
+              %end
+            </ul>
+          </td>
           <td class="block">{{user['birthdate']}}</td>
       </tr>
 	  %end

@@ -6,6 +6,6 @@
 </head>
 
 <body>
-  <h1>Not Found User called {{user_name}}</h1>
+  <h1>Cannot find users with those parameters</h1>
 </body>
 </html>
