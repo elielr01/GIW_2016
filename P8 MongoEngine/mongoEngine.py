@@ -15,42 +15,52 @@
 # Madrid
 # MongoEngine
 
-from mongoengine import connect
+from mongoengine import *
 connect('giw_mongoengine')
 
-class Usuario(document):
-    dni = StringField(required=true, unique = true, max_length = 9, regex = "[0-9]+[A-Z]")
-    nombre = StringField(required=true)
-    primer_apellido = StringField(required=true)
-    segundo_apellido = StringField()
-    fecha_nac = StringField(required=true, regex = "")
+#Clase Trajeta de Credito
+class Credit_card(EmbeddedDocument):
+    owner = StringField(required = True, min_length=1, max_length=10,unique=true)
+    number = StringField(required = True,min_length=16,max_length=16)
+    month_expire = StringField(required = True,min_length=2,max_length=2)
+    year_expire = StringField(required = True,min_length=2,max_length=2)
+    CVV = StringField(required = True,min_length=3, max_length=3) 
+
+#Clase pedido
+class Pedido(Document):
+    precio_total = FloatField(required = True)
+    fecha = ComplexDateTimeField(required = True)
+    order_line = ListField(EmbeddedDocumentField(Linea_pedido),required=True)
+    
+
+#Clase Linea de pedido
+class Linea_pedido(Document) :
+    cantidad = IntField(required=True, min_value=1, max_value=100)
+    precio_unidad = FloatField(required=True, min_value=0.01, max_value=1000.00)
+    nombre_producto = StringField(required=True,min_length=1, max_length=10)
+    precio_total = FloatField (required = True,min_value=0.01, max_value=10000.00)
+    ref_product = ReferenceField(Producto, required = True)
+
+#Clase producto
+class Producto(Document):
+    #Falta el formato
+    codigo_de_barras = StringField(required=True,unique=True,regex="[0-9]+", min_length=13,max_length=13)
+    name = StringField(required=True,min_length = 1, max_length = 10)
+    main_category  = IntField(required=True, min_value=0, max_value = 100)
+    category_list = ListField(IntField(min_value=0, max_value=100))
+
+#Clase Usuario -> Falta el regex
+class Usuario(Document) :
+    dni = StringField(required=True, unique = True, max_length = 9, regex = "[0-9]+[A-Z]")
+    nombre = StringField(required=True,min_length=1, max_length=10)
+    primer_apellido = StringField(required=True,min_length=1, max_length=10)
+    segundo_apellido = StringField(min_length=1, max_length=10)
+    fecha_nac = StringField(required=True, regex = "[0-9][0-9][0-9][0-9]'-'[0-9][0-9]'-'[0-9][0-9]")
     ultimos_accesos = ComplexDateTimeField()
     tarjetas = ListField(EmbeddedDocumentField(Credit_card))
     pedidos = ListField(ReferenceField(Pedidos, reverse_delete_rule=PULL))
-
-
-class Credit_card(EmbeddedDocument):
-    owner = StringField(required=true, min_length=1, max_length=10,unique=true)
-    number = StringField(required=true,min_length=16,max_length=16)
-    month_expire = StringField(required=true,min_length=2,max_length=2)
-    year_expire = StringField(required=true,min_length=2,max_length=2)
-    CVV = StringField(required=true,max_length=3) 
-
-
-class Linea_pedido(document):
-    cantidad = IntField(required=true, min_value=1)
-    precio_unidad = FloatField(required=true)
-    nombre_producto = StringField(required=true)
-    precio_total = FloatField (required = true)
-    ref_product = ReferenceField(Producto, required = true)
-
-class Producto(Document):
-    #Falta el formato
-    codigo_de_barras = StringField(required=true,unique=true,regex="")
-    name = StringField(required=true,min_length = 1, max_length = 10)
-    main_category  = IntField(max_value = 100)
-    category_list = ListField(IntField(min_value=0, max_value=100))
-
+    
+#Función para la validacion
 def clean(self):
 
     #Validación 1º
@@ -93,7 +103,7 @@ def clean(self):
         raise ValidationError("El nombre del producto de la linea de pedido no es equivalente al nombre del producto referenciado")
 
     #Validacion 5º
-    
+    #https://es.wikipedia.org/wiki/European_Article_Number
 
     #Validacion 6º
     if( self.tipo == "Producto" and self.category_list.length > 0 and self.category_list[0] != self.main_category):
@@ -101,26 +111,62 @@ def clean(self):
 
     #Validacion 7º - Hecho
     
-
+#Funcion para la inserción
 def insertar():
 
-    #Creamos las tres tarjetas
+    #Credit cards created
     credit_card1 = Credit_card("Pepe","123456789012","01","20","123")
-    credit_card2 = Credit_card("Pepa","098765432109", "02","19","321")
-    credit_card3 = Credit_card("Jose","135679087356", "03","21","541")
+    credit_card2 = Credit_card("Pepe","098765432109","02","19","321")
+    credit_card3 = Credit_card("Pepa","135679087356","03","21","541")
+    credit_card4 = Credit_card("Pepe","374970681357","05","25","409")
 
     #Creamos los productos
-    product1 = Producto("","bmw serie 1","bmw",["bmw","coche","medio de transporte"])
-    product2 = Producto("","huawei version 3","huawei")
-    product3 = Producto("","radiocaset","dispositivo")
+    product1 = Producto("1234567890123","bmw serie 1","bmw",["bmw","coche","medio de transporte"])
+    product2 = Producto("1234567890124","huawei version 3","huawei")
+    product3 = Producto("1234567890321","radiocaset","dispositivo")
+    product4 = Producto("1234567890796","Lenovo FR435","portatil",["portatil","gama alta"])
+    product5 = Producto("1234567890642","Camiseta del Real Madrid","camiseta",["camiseta","alta calidad"])
+    product6 = Producto("123456789036","Sudadera del Atlético de Madrid","sudadera")
+        
+    #Order lines created
+    order_line1 = Linea_De_Pedido(2, 450.95, "coche-bmw serie 1", 901.90,product1)
+    order_line2= Linea_De_Pedido(3,123.00,"movil-huawei version 3",369.00,product2)
+    order_line3 = Linea_De_Pedido(5,2.35,"musica-radiocaset",11.75,product3)
+    order_line4 = Linea_De_Pedido(1,367.50,"portatil-Lenovo FR435",367.50,product4)
+    order_line5 = Linea_De_Pedido(4,45.60,"camiseta-Camiseta del Real Madrid",182.40,product5)
+    order_line6 = Linea_De_Pedido(2,39.70,"sudadera-Sudadera del Atlético de Madrid",79.40,product6)    
 
-    orden_line = Linea_De_Pedidos(2, 5.50, "bmw serie 1", 11.0,product1)
+    #Orders created
+    order1 = Pedido(913.65,datetime.datetime.now().time(),[order_line1,order_line3])
+    order2 = Pedido(736,50,datetime.datetime.now().time(),[order_line2,order_line4])
+    order3 = Pedido(629.30,datetime.datetime.now().time(),[order_line5,order_line6,order_line4])
+    order4 = Pedido(981.30,datetime.datetime.now().time(),[order_line1,order_line6])
+    order5 = Pedido(551.40,datetime.datetime.now().time(),[order_line2,order_line5])
     
     #Creamos los usuarios
-    userOne = Usuario("50645712B",)
-    userTwo = Usuario("", )
-    
-def main():
-    print "Hola"
+    userOne = Usuario("50645712B","Pepe","García","1996-11-21","",[credit_card1,credit_card2,credit_card4],[order1,order2])
+    userTwo = Usuario("12345678T","Pepa","Fernández","1995-01-12","",[credit_card3],[order3,order4,order5])
+    #userThree = Usuario(dni="098765432137",nombre="Elí",fecha_nacimiento="1990-05-17")
 
-main()
+    #Guardamos los productos en la BBDD
+    product1.save()
+    product2.save()
+    product3.save()
+    product4.save()
+    product5.save()
+    product6.save()
+
+    #Guardamos los pedidos en la BBDD
+    order1.save();
+    order2.save();
+    order3.save();
+    order4.save();
+    order5.save();
+    
+    #Guardamos los usuarios en la BBDD
+    userOne.save()
+    userTwo.save()
+    #userThree.save()
+
+
+insertar()
