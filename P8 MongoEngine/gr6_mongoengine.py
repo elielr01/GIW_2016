@@ -22,11 +22,11 @@ connect('giw_mongoengine')
 
 # Definicion del esquema
 class Usuario(Document):
-    dni = StringField(required = True, unique = true, regex = "(\d{8}-?[A-Z]|[X-Z]-?\d{7}-?[A-Z])")
-    nombre = StringField(required = true)
-    primer_apellido = StringField(required = true)
+    dni = StringField(required = True, unique = True, regex = "(\d{8}-?[A-Z]|[X-Z]-?\d{7}-?[A-Z])")
+    nombre = StringField(required = True)
+    primer_apellido = StringField(required = True)
     segundo_apellido = StringField()
-    fecha_nac = StringField(required=true, regex = "\d{4}-\d{2}-\d{2}")
+    fecha_nac = StringField(required=True, regex = "\d{4}-\d{2}-\d{2}")
     ultimos_accesos = ListField(ComplexDateTimeField())#ComplexDateTimeField()
     tarjetas = ListField(EmbeddedDocumentField(Credit_card))
     pedidos = ListField(ReferenceField(Pedido, reverse_delete_rule = mongoengine.PULL))
@@ -97,11 +97,48 @@ class Usuario(Document):
                              " (\"AAAA-MM-DD\")")
 
 class Credit_card(EmbeddedDocument):
-    owner = StringField(required = true)
-    number = StringField(required = true, min_length = 16, max_length = 16, regex = "\d{16}")
-    month_expire = StringField(required = true, min_length = 2, max_length = 2, regex = "^0[1-9]$|^1[0-2]$")
-    year_expire = StringField(required = true, min_length = 2, max_length = 2, regex = "\d{2}")
-    CVV = StringField(required = true, min_length = 3, max_length = 3, regex = "\d{3}")
+    owner = StringField(required = True)
+    number = StringField(required = True, min_length = 16, max_length = 16, regex = "\d{16}")
+    month_expire = StringField(required = True, min_length = 2, max_length = 2, regex = "^0[1-9]$|^1[0-2]$")
+    year_expire = StringField(required = True, min_length = 2, max_length = 2, regex = "\d{2}")
+    CVV = StringField(required = True, min_length = 3, max_length = 3, regex = "\d{3}")
+
+class Producto(Document):
+    codigo_de_barras = StringField(required = True, unique = True)
+    name = StringField(required = True, min_length = 1)
+    main_category  = IntField(min_value = 1)
+    category_list = ListField(IntField(min_value = 1))
+
+    def clean(self):
+        #Primero se valida el formado del codigo de barras
+        suma = 0
+        for i, digit in enumerate(reversed(self.codigo_de_barras[:-1])):
+            suma += int(digit) * 3 if (i % 2 == 0) else int(digit)
+
+        digito_control = (10 - (suma % 10)) % 10
+
+        if self.codigo_de_barras[-1] != str(digito_control):
+            raise ValidationError("El codigo de barras no respeta el formato EAN-13")
+
+        #Despues, se agrega la categoría principal a la lista de categorías secundarias (si ésta existiera)
+        if len(self.category_list) != 0:
+            self.category_list = [self.main_category] + self.category_list
+
+class Linea_pedido(EmbeddedDocument):
+    cantidad = IntField(required = True, min_value = 1)
+    precio_unidad = FloatField(required = True)
+    nombre_producto = StringField(required = True)
+    precio_total = FloatField (required = True)
+    ref_product = ReferenceField(Producto, required = True)
+
+    def clean(self):
+        #Se valida primero que el precio total de la linea sea el correcto
+        if self.cantidad * self.precio_unidad != self.precio_total:
+            raise ValidationError("El precio total en la linea de pedido no es correcto.")
+
+        #Despues se valida que el nombre del producto en esta línea sea el mismo que el producto referenciado
+        if self.ref_product.name != self.nombre_producto:
+            raise ValidationError("El nombre del producto de la linea no coincide con el del producto referenciado")
 
 class Pedido (Document):
     precio_total = FloatField(required = True)
@@ -117,95 +154,63 @@ class Pedido (Document):
             raise ValidationError("El precio total del pedido no coincide con los precios totales de las lineas " +
                                   "del pedido")
 
-class Linea_pedido(EmbeddedDocument):
-    cantidad = IntField(required = True, min_value = 1)
-    precio_unidad = FloatField(required = True)
-    nombre_producto = StringField(required = True)
-    precio_total = FloatField (required = True)
-    ref_product = ReferenceField(Producto, required = true)
 
-    def clean(self):
-        if self.cantidad * self.precio_unidad != self.precio_total:
-            raise ValidationError("El precio total en la linea de pedido no es correcto.")
-
-
-
-#TODO FORMATO
-class Producto(Document):
-    #Falta el formato
-    codigo_de_barras = StringField(required = true, unique = true, regex = "")
-    name = StringField(required = true, min_length = 1)
-    main_category  = IntField(min_value = 1)
-    category_list = ListField(IntField(min_value = 1))
-
-def clean(self):
-
-    #Validación 1º
-    dic = dict()
-    dic[0] = "T"
-    dic[1] = "R"
-    dic[2] = "W"
-    dic[3] = "A"
-    dic[4] = "G"
-    dic[5] = "M"
-    dic[6] = "Y"
-    dic[7] = "F"
-    dic[8] = "P"
-    dic[9] = "D"
-    dic[10] = "X"
-    dic[11] = "B"
-    dic[12] = "N"
-    dic[13] = "J"
-    dic[14] = "Z"
-    dic[15] = "S"
-    dic[16] = "Q"
-    dic[17] = "V"
-    dic[18] = "H"
-    dic[19] = "L"
-    dic[20] = "C"
-    dic[21] = "K"
-    dic[22] = "E"
-
-    if (self.tipo == "Usuario"):
-        numero = self.dni[7] % 23
-        if(self.dni[8] != dic[numero]):
-            raise ValidationError("La letra del DNI no es válida")
-
-    #Validacion 3º - Hecho
-    if (self.tipo == "Linea_pedido") and (self.precio_total != (cantidad*precio_unidad)):
-         raise ValidationError("El precio total debe ser igual a la multiplicacion de la cantidad por el precio de la unidad")
-
-    #Validacion 4º -Hecho
-    if(self.tipo == "Linea_pedido" and self.nombre_producto != ref_product.name):
-        raise ValidationError("El nombre del producto de la linea de pedido no es equivalente al nombre del producto referenciado")
-
-    #Validacion 5º
-
-
-    #Validacion 6º
-    if( self.tipo == "Producto" and self.category_list.length > 0 and self.category_list[0] != self.main_category):
-        raise ValidationError("Su categoria principal no aparece en primer lugar en la lista de categorias secundarias")
-
-    #Validacion 7º - Hecho
-
-
+#Funcion para la inserción
 def insertar():
 
-    #Creamos las tres tarjetas
+    #Credit cards created
     credit_card1 = Credit_card("Pepe","123456789012","01","20","123")
-    credit_card2 = Credit_card("Pepa","098765432109", "02","19","321")
-    credit_card3 = Credit_card("Jose","135679087356", "03","21","541")
+    credit_card2 = Credit_card("Pepe","098765432109","02","19","321")
+    credit_card3 = Credit_card("Pepa","135679087356","03","21","541")
+    credit_card4 = Credit_card("Pepe","374970681357","05","25","409")
 
     #Creamos los productos
-    product1 = Producto("","bmw serie 1","bmw",["bmw","coche","medio de transporte"])
-    product2 = Producto("","huawei version 3","huawei")
-    product3 = Producto("","radiocaset","dispositivo")
+    product1 = Producto("1234567890123","bmw serie 1","bmw",["bmw","coche","medio de transporte"])
+    product2 = Producto("1234567890124","huawei version 3","huawei")
+    product3 = Producto("1234567890321","radiocaset","dispositivo")
+    product4 = Producto("1234567890796","Lenovo FR435","portatil",["portatil","gama alta"])
+    product5 = Producto("1234567890642","Camiseta del Real Madrid","camiseta",["camiseta","alta calidad"])
+    product6 = Producto("123456789036","Sudadera del Atlético de Madrid","sudadera")
 
-    orden_line = Linea_De_Pedidos(2, 5.50, "bmw serie 1", 11.0,product1)
+    #Order lines created
+    order_line1 = Linea_De_Pedido(2, 450.95, "coche-bmw serie 1", 901.90,product1)
+    order_line2= Linea_De_Pedido(3,123.00,"movil-huawei version 3",369.00,product2)
+    order_line3 = Linea_De_Pedido(5,2.35,"musica-radiocaset",11.75,product3)
+    order_line4 = Linea_De_Pedido(1,367.50,"portatil-Lenovo FR435",367.50,product4)
+    order_line5 = Linea_De_Pedido(4,45.60,"camiseta-Camiseta del Real Madrid",182.40,product5)
+    order_line6 = Linea_De_Pedido(2,39.70,"sudadera-Sudadera del Atlético de Madrid",79.40,product6)
+
+    #Orders created
+    order1 = Pedido(913.65,datetime.datetime.now().time(),[order_line1,order_line3])
+    order2 = Pedido(736,50,datetime.datetime.now().time(),[order_line2,order_line4])
+    order3 = Pedido(629.30,datetime.datetime.now().time(),[order_line5,order_line6,order_line4])
+    order4 = Pedido(981.30,datetime.datetime.now().time(),[order_line1,order_line6])
+    order5 = Pedido(551.40,datetime.datetime.now().time(),[order_line2,order_line5])
 
     #Creamos los usuarios
-    userOne = Usuario("50645712B",)
-    userTwo = Usuario("", )
+    userOne = Usuario("50645712B","Pepe","García","1996-11-21","",[credit_card1,credit_card2,credit_card4],[order1,order2])
+    userTwo = Usuario("12345678T","Pepa","Fernández","1995-01-12","",[credit_card3],[order3,order4,order5])
+    #userThree = Usuario(dni="098765432137",nombre="Elí",fecha_nacimiento="1990-05-17")
+
+    #Guardamos los productos en la BBDD
+    product1.save()
+    product2.save()
+    product3.save()
+    product4.save()
+    product5.save()
+    product6.save()
+
+    #Guardamos los pedidos en la BBDD
+    order1.save();
+    order2.save();
+    order3.save();
+    order4.save();
+    order5.save();
+
+    #Guardamos los usuarios en la BBDD
+    userOne.save()
+    userTwo.save()
+    #userThree.save()
 
 def main():
     print "Hola"
