@@ -26,6 +26,18 @@ def agg1():
 
     c = db['usuarios']
     numPaises = request.query.n
+
+    #Se revisa que todos los argumentos sean válidos
+    invalid_arguments = []
+    for parameter in request.query:
+        if parameter != "n" or int(numPaises) < 1:
+            invalid_arguments.append(parameter)
+
+    #Si hay argumentos inválidos se regresa una vista que lo indique
+    if len(invalid_arguments) > 0:
+        return template('Invalid_Find_Users_View.tpl', invalid_arguments = invalid_arguments)
+
+    #Tubería de agregación
     doc = c.aggregate( [ {'$group': {'_id':'$pais','sum_users':{'$sum': 1}} },{'$sort': {'sum_users':-1}},{'$limit': int(numPaises)}] )
 
     if(doc is not None):
@@ -33,13 +45,20 @@ def agg1():
     else:
         return template('Find_Users_Fail_View.tpl',fail=doc)
 
-
 @get('/products')
 # http://localhost:8080/products?min=2.34
 def agg2():
 
     minPrice = request.query.min
-    pass
+    c = db['pedidos']
+    cursor = c.aggregate([
+     {'$match' : {'precio':{'$gte':float(minPrice)}}},
+     {'$group': {'_id': '$lineas.nombre', 'cantidadTotal': {'$sum': '$lineas.cantidad'}}}])
+        
+    if(cursor is None):
+        return template("Find_Fail_Produts_View.tpl", price = minPrice)
+    else:
+        return template("Find_Products_View.tpl", data = cursor)
 
     
 @get('/age_range')
