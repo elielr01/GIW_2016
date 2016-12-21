@@ -54,9 +54,9 @@ class Producto(Document):
 
 class Linea_pedido(EmbeddedDocument):
     cantidad = IntField(required = True, min_value = 1)
-    precio_unidad = FloatField(required = True)
-    nombre_producto = StringField(required = True)
-    precio_total = FloatField (required = True)
+    precio_unidad = FloatField(required = True,min_value=0)
+    nombre_producto = StringField(required = True,min_lengh=0)
+    precio_total = FloatField (required = True,min_value=0)
     ref_product = ReferenceField(Producto, required = True)
 
     def clean(self):
@@ -69,7 +69,7 @@ class Linea_pedido(EmbeddedDocument):
             raise ValidationError("El nombre del producto de la linea no coincide con el del producto referenciado")
 
 class Pedido (Document):
-    precio_total = FloatField(required = True)
+    precio_total = FloatField(required = True, min_value=0)
     fecha = ComplexDateTimeField(required = True)
     lineas = ListField(EmbeddedDocumentField(Linea_pedido), required = True)
 
@@ -84,9 +84,9 @@ class Pedido (Document):
 
 class Usuario(Document):
     dni = StringField(required = True, unique = True, regex = "(\d{8}-?[A-Z]|[X-Z]-?\d{7}-?[A-Z])")
-    nombre = StringField(required = True)
-    primer_apellido = StringField(required = True)
-    segundo_apellido = StringField()
+    nombre = StringField(required = True,min_lengh=1)
+    primer_apellido = StringField(required = True,min_lengh=1)
+    segundo_apellido = StringField(min_lengh=1)
     fecha_nac = StringField(required=True, regex = "\d{4}-\d{2}-\d{2}")
     ultimos_accesos = ListField(ComplexDateTimeField())
     tarjetas = ListField(EmbeddedDocumentField(Credit_card))
