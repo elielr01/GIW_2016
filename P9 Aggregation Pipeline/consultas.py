@@ -19,14 +19,19 @@ from bottle import *
 
 mongoclient = MongoClient()
 db = mongoclient['giw']
-c = db['usuarios']
 
 @get('/top_countries')
 # http://localhost:8080/top_countries?n=3
 def agg1():
 
+    c = db['usuarios']
     numPaises = request.query.n
-    pass
+    doc = c.aggregate( [ {'$group': {'_id':'$pais','sum_users':{'$sum': 1}} },{'$sort': {'sum_users':-1}},{'$limit': int(numPaises)}] )
+
+    if(doc is not None):
+        return template('Find_Users_View.tpl',data=doc)
+    else:
+        return template('Find_Users_Fail_View.tpl',fail=doc)
 
 
 @get('/products')

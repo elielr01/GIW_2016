@@ -85,7 +85,7 @@ def find_users():
         users = c.find({"name":nombre,"surname":apellido})
     else:
         users = c.find({"name":nombre,"surname":apellido,"birthdate":cumpleanos})
-
+    print type(users)
     return template('Find_Users_View.tpl', data=users)
 
 
