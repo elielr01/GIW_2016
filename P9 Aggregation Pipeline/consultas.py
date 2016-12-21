@@ -49,12 +49,23 @@ def agg1():
 # http://localhost:8080/products?min=2.34
 def agg2():
 
-    minPrice = request.query.min
+
     c = db['pedidos']
-    cursor = c.aggregate([
-     {'$match' : {'precio':{'$gte':float(minPrice)}}},
-     {'$group': {'_id': '$lineas.nombre', 'cantidadTotal': {'$sum': '$lineas.cantidad'}}}])
-        
+    
+    minPrice = request.query.min
+
+    #Se revisa que todos los argumentos sean válidos
+    invalid_arguments = []
+    for parameter in request.query:
+        if parameter != "min" or float(minPrice) <= 0:
+            invalid_arguments.append(parameter)
+
+    #Si hay argumentos inválidos se regresa una vista que lo indique
+    if len(invalid_arguments) > 0:
+        return template('Invalid_Find_Users_View.tpl', invalid_arguments = invalid_arguments)
+    
+    cursor = c.aggregate([ {'$match' : {'precio':{'$gte':float(minPrice)} } },
+                           {'$group': {'_id': '$lineas.nombre', 'cantidadTotal': {'$sum': '$lineas.cantidad'}}} ]   )
     if(cursor is None):
         return template("Find_Fail_Produts_View.tpl", price = minPrice)
     else:
