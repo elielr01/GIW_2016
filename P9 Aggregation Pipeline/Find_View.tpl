@@ -26,14 +26,16 @@
       <th class="block">Country</th>
       <th class="block">Number of Users</th>
     </tr>
+	%count=0
 	%for user in data:
       <tr>
           <td class="block">{{user['_id']}}</td>
            <td class="block">{{user['sum_users']}}</td>
       </tr>
+	  %count+=1
 	  %end
   </table>
-
+<PRE> Elements found: {{count}}</PRE>
 </body>
 %elif ejercicio == 2:
 <head>
@@ -51,14 +53,42 @@
       <th class="block">Quantity</th>
 	  <th class="block">Unit Price</th>
     </tr>
+	%count=0
 	%for product in data:
       <tr>
           <td class="block">{{product['_id']}}</td>
            <td class="block">{{product['cantidadTotal']}}</td>
 			<td class="block">{{product['precio']}}</td>
       </tr>
+	  %count+=1
 	  %end
   </table>
+<PRE> Elements found: {{count}}</PRE>
+</body>	
+%elif ejercicio == 3:
+<head>
+  <title>Age Range Country Users</title>
+  <meta charset="utf-8" />
+</head>
 
+<body>
+  <header>
+    <h2>Show Countries with their age range</h2>
+  </header>
+  <table>
+    <tr>
+      <th class="block">Country</th>
+      <th class="block">Age Range</th>
+    </tr>
+	%count=0
+	%for country in data:
+      <tr>
+          <td class="block">{{country['_id']}}</td>
+           <td class="block">{{country['rangoEdades']}}</td>
+      </tr>
+	  %count+=1
+	  %end
+  </table>
+<PRE> Elements found: {{count}}</PRE>
 </body>	
 </html>
