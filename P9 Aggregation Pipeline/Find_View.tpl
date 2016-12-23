@@ -11,6 +11,7 @@
     white-space:nowrap;
   }
 </style>
+%if ejercicio == 1:
 <head>
   <title>Users</title>
   <meta charset="utf-8" />
@@ -34,4 +35,30 @@
   </table>
 
 </body>
+%elif ejercicio == 2:
+<head>
+  <title>Order Items</title>
+  <meta charset="utf-8" />
+</head>
+
+<body>
+  <header>
+    <h2>Show Order Items</h2>
+  </header>
+  <table>
+    <tr>
+      <th class="block">Product Name</th>
+      <th class="block">Quantity</th>
+	  <th class="block">Unit Price</th>
+    </tr>
+	%for product in data:
+      <tr>
+          <td class="block">{{product['_id']}}</td>
+           <td class="block">{{product['cantidadTotal']}}</td>
+			<td class="block">{{product['precio']}}</td>
+      </tr>
+	  %end
+  </table>
+
+</body>	
 </html>

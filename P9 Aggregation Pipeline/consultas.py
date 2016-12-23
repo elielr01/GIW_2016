@@ -35,15 +35,15 @@ def agg1():
 
     #Si hay argumentos inválidos se regresa una vista que lo indique
     if len(invalid_arguments) > 0:
-        return template('Invalid_Find_Users_View.tpl', invalid_arguments = invalid_arguments)
+        return template('Invalid_Find_View.tpl', invalid_arguments = invalid_arguments,tipo="Users")
 
     #Tubería de agregación
     doc = c.aggregate( [ {'$group': {'_id':'$pais','sum_users':{'$sum': 1}} },{'$sort': {'sum_users':-1}},{'$limit': int(numPaises)}] )
 
     if(doc is not None):
-        return template('Find_Users_View.tpl',data=doc)
+        return template('Find_View.tpl',data=doc,ejercicio=1)
     else:
-        return template('Find_Users_Fail_View.tpl',fail=doc)
+        return template('Find_Fail_View.tpl',tipo="Users",fail=doc)
 
 @get('/products')
 # http://localhost:8080/products?min=2.34
@@ -62,23 +62,41 @@ def agg2():
 
     #Si hay argumentos inválidos se regresa una vista que lo indique
     if len(invalid_arguments) > 0:
-        return template('Invalid_Find_Users_View.tpl', invalid_arguments = invalid_arguments)
+        return template('Invalid_Find_View.tpl', invalid_arguments = invalid_arguments,tipo="Order Items")
     
-    cursor = c.aggregate([ {'$match' : {'precio':{'$gte':float(minPrice)} } },
-                           {'$group': {'_id': '$lineas.nombre', 'cantidadTotal': {'$sum': '$lineas.cantidad'}}} ]   )
+    cursor = c.aggregate([  {'$unwind': '$lineas'},
+                            {'$match' : {'lineas.precio':{'$gte':float(minPrice)} } },
+                           {'$group': {'_id': '$lineas.nombre', 'cantidadTotal': {'$sum': '$lineas.cantidad'}, 'precio': {'$first': '$lineas.precio'}  } }
+                            ]   )
     if(cursor is None):
-        return template("Find_Fail_Produts_View.tpl", price = minPrice)
+        return template("Find_Fail__View.tpl", tipo="Order Items",fail = minPrice)
     else:
-        return template("Find_Products_View.tpl", data = cursor)
-
+        return template("Find_View.tpl", data = cursor, ejercicio=2)
+1
     
 @get('/age_range')
 # http://localhost:8080/age_range?min=80
 def agg3():
 
+    c = db['usuarios']
     minUsers = request.query.min
-    pass
+
+    #Se revisa que todos los argumentos sean válidos
+    invalid_arguments = []
+    for parameter in request.query:
+        if parameter != "min" or int(minUsers) < 1:
+            invalid_arguments.append(parameter)
+
+    #Si hay argumentos inválidos se regresa una vista que lo indique
+    if len(invalid_arguments) > 0:
+        return template('Invalid_Find_View.tpl', invalid_arguments = invalid_arguments,tipo="Users")
+
+    #Falta aqui tubería
     
+    if(doc is not None):
+        return template('Find_View.tpl',data=doc,ejercicio=1)
+    else:
+        return template('Find_Fail_View.tpl',tipo="Users",fail=doc)
     
 @get('/avg_lines')
 # http://localhost:8080/avg_lines
