@@ -105,6 +105,36 @@ def agg3():
 @get('/avg_lines')
 # http://localhost:8080/avg_lines
 def agg4():
+
+    c = db['usuarios']
+    doc = c.aggregate([{'$lookup':
+                            {
+                              '$from': 'pedidos',
+                              '$localField' : '$_id',
+                              '$foreignField': '$cliente',
+                              '$as' : 'pedidosPorCliente'
+                            }
+                       },
+                       {'$group':
+                            {
+                                '_id':'$cliente',
+                                'pais':'$pais',
+                                'sumPedidos':{'$count':1}
+                            }
+                       },
+                       {'$group':
+                            {
+                                '_id': '$pais',
+                                'mediaPedidos':{'$avg':'$sumPedidos'}
+                            }
+                       }
+    ])
+
+    if(doc is not None):
+        return template('Find_View.tpl',data=doc,ejercicio=4)
+    else:
+        return template('Find_Fail_View.tpl',tipo="Users",fail=doc)
+
     pass
     
     
