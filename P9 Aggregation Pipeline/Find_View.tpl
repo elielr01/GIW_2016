@@ -93,4 +93,31 @@
   </table>
 <PRE> Elements found: {{count}}</PRE>
 </body>
+
+%elif ejercicio == 4:
+<head>
+  <title>AVG Lines</title>
+  <meta charset="utf-8" />
+</head>
+
+<body>
+  <header>
+    <h2>Show Countries with their lines average</h2>
+  </header>
+  <table>
+    <tr>
+      <th class="block">Country</th>
+      <th class="block">Line Average</th>
+    </tr>
+	%count=0
+	%for country in data:
+      <tr>
+          <td class="block">{{country['_id']}}</td>
+           <td class="block">{{country['mediaPedidos']}}</td>
+      </tr>
+	  %count+=1
+	  %end
+  </table>
+<PRE> Elements found: {{count}}</PRE>
+</body>		
 </html>
