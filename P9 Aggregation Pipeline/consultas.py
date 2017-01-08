@@ -119,18 +119,14 @@ def agg4():
                               'as' : 'pedidosPorCliente'
                             }
                        },
+                       {'$unwind': '$pedidosPorCliente'},
                        {'$group':
                             {
                                 '_id':'$pais',
-                                'sumPedidos':{'$sum': 1}
-                            }
-                       },
-                       {'$project':
-                            {
-                                'mediaPedidos':{'$avg':'$sumPedidos'}
+                                'promedioLineas':{'$avg': {'$size': '$pedidosPorCliente.lineas'}}
                             }
                        }
-    ])
+                       ])
 
     if(doc is not None):
         return template('Find_View.tpl',data=doc,ejercicio=4)

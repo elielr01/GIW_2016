@@ -113,11 +113,11 @@
 	%for country in data:
       <tr>
           <td class="block">{{country['_id']}}</td>
-           <td class="block">{{country['mediaPedidos']}}</td>
+           <td class="block">{{country['promedioLineas']}}</td>
       </tr>
 	  %count+=1
 	  %end
   </table>
 <PRE> Elements found: {{count}}</PRE>
-</body>		
+</body>
 </html>
