@@ -94,7 +94,6 @@ def agg3():
     if len(invalid_arguments) > 0:
         return template('Invalid_Find_View.tpl', invalid_arguments = invalid_arguments,tipo="Users")
 
-    #Falta aqui tubería
     doc = c.aggregate([{'$group': {'_id':'$pais', 'numUsers': {'$sum':1}, 'minEdad': {'$min':'$edad'},
                                    'maxEdad': {'$max':'$edad'}}},
                        {'$match': {'numUsers': {'$gte':int(minUsers)}}},
@@ -133,15 +132,46 @@ def agg4():
     else:
         return template('Find_Fail_View.tpl',tipo="Average Lines",fail=doc)
 
-    pass
-
-
 @get('/total_country')
 # http://localhost:8080/total_country?c=Alemania
 def agg5():
 
+    c = db['usuarios']
     nameCountry = request.query.c
-    pass
+
+    #Se revisa que todos los argumentos sean válidos
+    invalid_arguments = []
+    for parameter in request.query:
+        if parameter != "c":
+            invalid_arguments.append(parameter)
+
+    #Si hay argumentos inválidos se regresa una vista que lo indique
+    if len(invalid_arguments) > 0:
+        return template('Invalid_Find_View.tpl', invalid_arguments = invalid_arguments,tipo="Country")
+
+    doc = c.aggregate([{'$match': {'pais': nameCountry}},
+                       {'$lookup':
+                            {
+                              'from': 'pedidos',
+                              'localField' : '_id',
+                              'foreignField': 'cliente',
+                              'as' : 'pedidosPorCliente'
+                            }
+                       },
+                       {'$unwind': '$pedidosPorCliente'},
+                       {'$group':
+                            {
+                                '_id':'$pais',
+                                'totalSpent':{'$sum': '$pedidosPorCliente.total'}
+                            }
+                       }
+                       ])
+
+    if(doc is not None):
+        return template('Find_View.tpl',data=doc,ejercicio=5)
+    else:
+        return template('Find_Fail_View.tpl',tipo="Average Lines",fail=doc)
+
 
 
 if __name__ == "__main__":

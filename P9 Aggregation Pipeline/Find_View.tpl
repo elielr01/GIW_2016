@@ -120,4 +120,31 @@
   </table>
 <PRE> Elements found: {{count}}</PRE>
 </body>
+
+%elif ejercicio == 5:
+<head>
+  <title>Total Country</title>
+  <meta charset="utf-8" />
+</head>
+
+<body>
+  <header>
+    <h2>Total euros spent by country</h2>
+  </header>
+  <table>
+    <tr>
+      <th class="block">Country</th>
+      <th class="block">Total spent</th>
+    </tr>
+	%count=0
+	%for country in data:
+      <tr>
+          <td class="block">{{country['_id']}}</td>
+           <td class="block">{{country['totalSpent']}}</td>
+      </tr>
+	  %count+=1
+	  %end
+  </table>
+<PRE> Elements found: {{count}}</PRE>
+</body>
 </html>
