@@ -109,22 +109,20 @@ def agg4():
     c = db['usuarios']
     doc = c.aggregate([{'$lookup':
                             {
-                              '$from': 'pedidos',
-                              '$localField' : '$_id',
-                              '$foreignField': '$cliente',
-                              '$as' : 'pedidosPorCliente'
+                              'from': 'pedidos',
+                              'localField' : '_id',
+                              'foreignField': 'cliente',
+                              'as' : 'pedidosPorCliente'
                             }
                        },
                        {'$group':
                             {
-                                '_id':'$cliente',
-                                'pais':'$pais',
-                                'sumPedidos':{'$count':1}
+                                '_id':'$pais',
+                                'sumPedidos':{'$sum': 1}
                             }
                        },
-                       {'$group':
+                       {'$project':
                             {
-                                '_id': '$pais',
                                 'mediaPedidos':{'$avg':'$sumPedidos'}
                             }
                        }
@@ -133,7 +131,7 @@ def agg4():
     if(doc is not None):
         return template('Find_View.tpl',data=doc,ejercicio=4)
     else:
-        return template('Find_Fail_View.tpl',tipo="Users",fail=doc)
+        return template('Find_Fail_View.tpl',tipo="Average Lines",fail=doc)
 
     pass
     
