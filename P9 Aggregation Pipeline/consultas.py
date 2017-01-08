@@ -38,7 +38,10 @@ def agg1():
         return template('Invalid_Find_View.tpl', invalid_arguments = invalid_arguments,tipo="Users")
 
     #Tubería de agregación
-    doc = c.aggregate( [ {'$group': {'_id':'$pais','sum_users':{'$sum': 1}} },{'$sort': {'sum_users':-1}},{'$limit': int(numPaises)}] )
+    doc = c.aggregate([{'$group': {'_id':'$pais','sum_users':{'$sum': 1}} },
+                       {'$sort': {'sum_users':-1}},
+                       {'$limit': int(numPaises)}
+                       ])
 
     if(doc is not None):
         return template('Find_View.tpl',data=doc,ejercicio=1)
@@ -51,7 +54,7 @@ def agg2():
 
 
     c = db['pedidos']
-    
+
     minPrice = request.query.min
 
     #Se revisa que todos los argumentos sean válidos
@@ -63,17 +66,17 @@ def agg2():
     #Si hay argumentos inválidos se regresa una vista que lo indique
     if len(invalid_arguments) > 0:
         return template('Invalid_Find_View.tpl', invalid_arguments = invalid_arguments,tipo="Order Items")
-    
-    cursor = c.aggregate([  {'$unwind': '$lineas'},
-                            {'$match' : {'lineas.precio':{'$gte':float(minPrice)} } },
-                           {'$group': {'_id': '$lineas.nombre', 'cantidadTotal': {'$sum': '$lineas.cantidad'}, 'precio': {'$first': '$lineas.precio'}  } }
-                            ]   )
+
+    cursor = c.aggregate([{'$unwind': '$lineas'},
+                          {'$match' : {'lineas.precio':{'$gte':float(minPrice)} } },
+                          {'$group': {'_id': '$lineas.nombre', 'cantidadTotal': {'$sum': '$lineas.cantidad'},
+                                      'precio': {'$first': '$lineas.precio'}}}
+                          ])
     if(cursor is None):
         return template("Find_Fail__View.tpl", tipo="Order Items",fail = minPrice)
     else:
         return template("Find_View.tpl", data = cursor, ejercicio=2)
-1
-    
+
 @get('/age_range')
 # http://localhost:8080/age_range?min=80
 def agg3():
@@ -101,7 +104,7 @@ def agg3():
         return template('Find_View.tpl',data=doc,ejercicio=3)
     else:
         return template('Find_Fail_View.tpl',tipo="Users",fail=doc)
-    
+
 @get('/avg_lines')
 # http://localhost:8080/avg_lines
 def agg4():
@@ -136,16 +139,16 @@ def agg4():
         return template('Find_Fail_View.tpl',tipo="Users",fail=doc)
 
     pass
-    
-    
+
+
 @get('/total_country')
 # http://localhost:8080/total_country?c=Alemania
 def agg5():
 
     nameCountry = request.query.c
     pass
-    
-        
+
+
 if __name__ == "__main__":
     # No cambiar host ni port ni debug
     run(host='localhost',port=8080,debug=True)

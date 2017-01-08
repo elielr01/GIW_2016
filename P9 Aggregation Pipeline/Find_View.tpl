@@ -7,19 +7,20 @@
   }
 
   tr td:last-child{
-    width:1%;
+    //width:1%;
     white-space:nowrap;
   }
 </style>
+
 %if ejercicio == 1:
 <head>
-  <title>Users</title>
+  <title>Top Countries</title>
   <meta charset="utf-8" />
 </head>
 
 <body>
   <header>
-    <h2>Show Users</h2>
+    <h2>Top Countries</h2>
   </header>
   <table>
     <tr>
@@ -37,6 +38,7 @@
   </table>
 <PRE> Elements found: {{count}}</PRE>
 </body>
+
 %elif ejercicio == 2:
 <head>
   <title>Order Items</title>
@@ -64,7 +66,7 @@
 	  %end
   </table>
 <PRE> Elements found: {{count}}</PRE>
-</body>	
+</body>
 %elif ejercicio == 3:
 <head>
   <title>Age Range Country Users</title>
@@ -90,5 +92,5 @@
 	  %end
   </table>
 <PRE> Elements found: {{count}}</PRE>
-</body>	
+</body>
 </html>
