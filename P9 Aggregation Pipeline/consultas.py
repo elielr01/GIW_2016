@@ -60,7 +60,7 @@ def agg2():
     #Se revisa que todos los argumentos sean válidos
     invalid_arguments = []
     for parameter in request.query:
-        if parameter != "min" or float(minPrice) <= 0:
+        if parameter != "min" or float(minPrice) < 0:
             invalid_arguments.append(parameter)
 
     #Si hay argumentos inválidos se regresa una vista que lo indique
@@ -95,11 +95,12 @@ def agg3():
         return template('Invalid_Find_View.tpl', invalid_arguments = invalid_arguments,tipo="Users")
 
     #Falta aqui tubería
-    doc = c.aggregate( [ {'$group': {'_id':'$pais', 'numUsers': {'$sum':1}, 'minEdad': {'$min':'$edad'} , 'maxEdad': {'$max':'$edad'} }  },
-                        {'$match': {'numUsers': {'$gte':int(minUsers)} }  },
-                        {'$project': {'rangoEdades': {'$concat':[{'$substr': ['$minEdad',0,1]},'-',{'$substr': ['$maxEdad',0,3]}]},'numUsers':1}},
-                         {'$sort': {'rangoEdades':-1,'_id':1} }
-        ])
+    doc = c.aggregate([{'$group': {'_id':'$pais', 'numUsers': {'$sum':1}, 'minEdad': {'$min':'$edad'},
+                                   'maxEdad': {'$max':'$edad'}}},
+                       {'$match': {'numUsers': {'$gte':int(minUsers)}}},
+                       {'$project': {'rangoEdades': {'$subtract': ['$maxEdad', '$minEdad']}, 'numUsers': 1}},
+                       {'$sort': {'rangoEdades':-1,'_id':1} }
+                       ])
     if(doc is not None):
         return template('Find_View.tpl',data=doc,ejercicio=3)
     else:
