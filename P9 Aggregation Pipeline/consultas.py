@@ -170,7 +170,7 @@ def agg5():
     if(doc is not None):
         return template('Find_View.tpl',data=doc,ejercicio=5)
     else:
-        return template('Find_Fail_View.tpl',tipo="Average Lines",fail=doc)
+        return template('Find_Fail_View.tpl',tipo="Total Country",fail=doc)
 
 
 
