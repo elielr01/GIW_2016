@@ -37,13 +37,13 @@ def signup():
     password = request.forms.get('password')
     password2 = request.forms.get('password2')
 
-    if contraseña != contraseñaRepetida:
-        return template InfoView(info = "Las contraseñas no coinciden")
+    if password != password2:
+        return template('FailView.tpl',info = "Las contraseñas no coinciden")
         
-    doc = c.aggregate([ $match: { '_id': nick } ])
+    doc = c.aggregate([ { '$match': { '_id': nick } }])
     
     if doc is not None:
-        return template InfoView(info = "El alias de usuario ya existe")
+        return template('FailView.tpl', info = "El alias de usuario ya existe")
 
     #insertar en la base de datos según nuestro criterio de almacenamiento
     chars = string.ascii_uppercase
@@ -60,61 +60,61 @@ def signup():
             'password': password,
             'salt': sal,
             'it': 100000
-        }
+        })
     #Devolvemos la página web
-    return template View(nickName = nick)
+    return template('LoginView.tpl',nickName = nick)
     
 
 @post('/change_password')
 def change_password():
     nick = request.forms.get('nickname')
-    contraseñaAntigua = request.forms.get('old_Password')
-    contraseñaNueva = request.forms.get('new_Password')
+    contrasenaAntigua = request.forms.get('old_Password')
+    contrasenaNueva = request.forms.get('new_Password')
     
-    doc = c.aggregate([ $match: { '_id': nick },
-                        $project: {'_id':0, 'salt':1}])
+    doc = c.aggregate([ { '$match': { '_id': nick } },
+                        {'$project': {'_id':0, 'salt':1} }])
                         
     if doc is not None:
         sal = doc['salt']
     else:
-        return template FailView(info = "Usuario incorrecto")
+        return template('FailView.tpl', info = "Usuario incorrecto")
 
     password += 'M'
     dk = hashlib.pbkdf2_hmac('sha256', password, sal, 100000)
-    contraseñaTransformada = binascii.hexlify(dk)
+    contrasenaTransformada = binascii.hexlify(dk)
     
-    doc = c.aggregate([ $match: { '_id': nick }, 
-                        $match: { 'password': contraseñaTransformada } ])
+    doc = c.aggregate([ {'$match': { '_id': nick } }, 
+                        {'$match': { 'password': contrasenaTransformada } }])
     if doc is not None: #Alias no existe o si old_password no coincide con la contraseña almacenada:
-        return template FailView(info = "Usuario o contraseña incorrectos")
+        return template('FailView.tpl', info = "Usuario o contraseña incorrectos")
 
     #Devolvemos la página web
-    return template InfoView (info = "La contraseña del usuario ? ha sido modificada", nick)
+    return template('FailView.tpl', info = "La contraseña del usuario ? ha sido modificada")
 
 @post('/login')
 def login():
     nick = request.forms.get('nickname')
-    contraseña = request.forms.get('password')
+    contrasena = request.forms.get('password')
     
-     doc = c.aggregate([ $match: { '_id': nick },
-                        $project: {'_id':0, 'salt':1}])
+    doc = c.aggregate([ { '$match': { '_id': nick } },
+                        {'$project': {'_id':0, 'salt':1} }])
                         
     if doc is not None:
         sal = doc['salt']
     else:
-        return template FailView(info = "Usuario incorrecto")
+        return template('FailView.tpl', info = "Usuario incorrecto")
 
     password += 'M'
     dk = hashlib.pbkdf2_hmac('sha256', password, sal, 100000)
-    contraseñaTransformada = binascii.hexlify(dk)
+    contrasenaTransformada = binascii.hexlify(dk)
     
-    doc = c.aggregate([ $match: { '_id': nick }, 
-                        $match: { 'password': contraseñaTransformada } ])
+    doc = c.aggregate([ {'$match': { '_id': nick }  }, 
+                        {'$match': { 'password': contrasenaTransformada }  } ])
     if doc is not None: #Alias no existe o si password no coincide con la contraseña almacenada:
-        return template FailView(info = "Usuario o contraseña incorrectos")
+        return template('FailView.tpl', info = "Usuario o contraseña incorrectos")
 
     #Devolvemos la página web
-    return template View(nickName = nick)
+    return template('LoginView.tpl', nickName = nick)
 
 
 ##############
