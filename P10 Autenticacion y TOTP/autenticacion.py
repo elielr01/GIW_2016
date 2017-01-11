@@ -14,9 +14,15 @@ from pymongo import MongoClient
 ##############
 
 # 
-# Explicación detallada del mecanismo escogido para el almacenamiento de c
+# Explicación detallada del mecanismo escogido para el almacenamiento de
 # contraseñas, explicando razonadamente por qué es seguro
 #
+# Para esta práctica hemos utilizado una función que implementa un standard de criptografía de clva pública
+# especificamente conocida como PKCS #5 v2.0. Esta función implementa un algoritmo hash indicado (en nuestro caso SHA-256, 
+# con una sal, un número de iteraciones determinados (función de realentización, en nuestro caso 100000) y la contraseña
+# a la que previamente le añadimos la pimienta incrustada en el código(M). El hash permite evitar la exposición directa
+# de la contraseña o el descifrado de la misma, la sal disminuye las probabilidades de éxito de un ataque con tablas rainbow
+# y la pimienta y función de realentización hacen poco viable la ruptura por fuerza bruta.
 
 mongoclient = MongoClient()
 db = mongoclient['giw']
