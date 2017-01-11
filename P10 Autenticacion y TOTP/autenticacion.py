@@ -1,24 +1,3 @@
-# -*- coding: utf-8 -*-
-# Practica 10 - Autenticación & TOTP
-
-#Juan Mas Aguilar, Lorenzo De La Paz Suárez y Eli Emmanuel Linares Romero declaramos que esta solución
-#es fruto exclusivamente nuestro trabajo personal. No hemos sido
-#ayudados por ninguna otra persona ni hemos obtenido la solución de
-#fuentes externas, y tampoco hemos compartido nuestra solución con
-#nadie. Declaramos además que no hemos realizado de manera deshonesta
-#ninguna otra actividad que pueda mejorar nuestros resultados
-#ni perjudicar los resultados de los demás.
-
-# Lab 06 Puesto 01
-# Gestion de la Informacion en la Web - 2016-2017
-# Universidad Complutense de Madrid
-# Madrid
-# Autenticación & TOTP
-from bottle import run, post
-from pymongo import MongoClient
-
-
-##############
 # APARTADO 1 #
 ##############
 
@@ -33,31 +12,40 @@ c = db['users']
 
 @post('/signup')
 def signup():
-    nick = request.query.nickname
-    nombre = request.query.name
-    pais = request.query.country
-    correo = request.query.email
-    contraseña = request.query.password
-    contraseñaRepetida = request.query.password2
+    nick = request.forms.get('nick')
+    nombre = request.forms.get('nombre')
+    pais = request.forms.get('pais')
+    correo = request.forms.get('correo')
+    contraseña = request.forms.get('contraseña')
+    contraseñaRepetida = request.forms.get('contraseñaRepetida')
 
     if contraseña != contraseñaRepetida:
         return template InfoView(info = "Las contraseñas no coinciden")
-    if True:
+        
+    doc = c.aggregate([ $match: { '_id': nick } ])
+    
+    if doc is not None:
         return template InfoView(info = "El alias de usuario ya existe")
 
-    #insertar en la base de datos según nuestro criterio de almancenamiento
-
+    #insertar en la base de datos según nuestro criterio de almacenamiento
+    seed = 
     #Devolvemos la página web
     return template View(nickName = nick)
     
 
 @post('/change_password')
 def change_password():
-    nick = request.query.nickname
-    contraseñaAntigua = request.query.old_password
-    contraseñaNueva = request.query.new_password
-
-    if #Alias no existe o si old_password no coincide con la contraseña almacenada:
+    nick = request.forms.get('nick')
+    contraseñaAntigua = request.forms.get('oldPassword')
+    contraseñaNueva = request.forms.get('newPassword')
+    
+    #Transformacion de contraseña
+    #contraseñaTransformada = ... 
+    #############################
+    
+    doc = c.aggregate([ $match: { '_id': nick }, 
+                        $match: { 'password': contraseñaTransformada } ])
+    if doc is not None: #Alias no existe o si old_password no coincide con la contraseña almacenada:
         return template FailView(info = "Usuario o contraseña incorrectos")
 
     #Devolvemos la página web
@@ -65,10 +53,16 @@ def change_password():
 
 @post('/login')
 def login():
-    nick = request.query.nickname
-    contraseña = request.query.password
-
-    if #Alias no existe o si password no coincide con la contraseña almacenada:
+    nick = request.forms.get('nick')
+    contraseña = request.forms.get('contraseña')
+    
+    #Transformacion de contraseña
+    #contraseñaTransformada = ... 
+    #############################
+    
+    doc = c.aggregate([ $match: { '_id': nick }, 
+                        $match: { 'password': contraseñaTransformada } ])
+    if doc is not None: #Alias no existe o si password no coincide con la contraseña almacenada:
         return template FailView(info = "Usuario o contraseña incorrectos")
 
     #Devolvemos la página web
