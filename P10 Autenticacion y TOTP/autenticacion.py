@@ -1,3 +1,15 @@
+# -*- coding: utf-8 -*-
+
+#
+# CABECERA AQUI
+#
+
+
+from bottle import run, post
+# Resto de importaciones
+import hashlib
+import binascii
+from pymongo import MongoClient
 # APARTADO 1 #
 ##############
 
@@ -12,12 +24,12 @@ c = db['users']
 
 @post('/signup')
 def signup():
-    nick = request.forms.get('nick')
-    nombre = request.forms.get('nombre')
-    pais = request.forms.get('pais')
-    correo = request.forms.get('correo')
-    contraseña = request.forms.get('contraseña')
-    contraseñaRepetida = request.forms.get('contraseñaRepetida')
+    nickname = request.forms.get('nickname')
+    name = request.forms.get('name')
+    country = request.forms.get('country')
+    email = request.forms.get('email')
+    password = request.forms.get('password')
+    password2 = request.forms.get('password2')
 
     if contraseña != contraseñaRepetida:
         return template InfoView(info = "Las contraseñas no coinciden")
@@ -28,20 +40,42 @@ def signup():
         return template InfoView(info = "El alias de usuario ya existe")
 
     #insertar en la base de datos según nuestro criterio de almacenamiento
-    seed = 
+    chars = string.ascii_uppercase
+    sal = ''.join(random.choice(chars) for _ in range(15))
+    password += 'M'
+    dk = hashlib.pbkdf2_hmac('sha256', password, sal, 100000)
+    password = binascii.hexlify(dk)
+    result = db.users.insert_one(
+        {
+            'nickname': nickname,
+            'name': name,
+            'country': country,
+            'email': email,
+            'password': password,
+            'salt': sal,
+            'it': 100000
+        }
     #Devolvemos la página web
     return template View(nickName = nick)
     
 
 @post('/change_password')
 def change_password():
-    nick = request.forms.get('nick')
-    contraseñaAntigua = request.forms.get('oldPassword')
-    contraseñaNueva = request.forms.get('newPassword')
+    nick = request.forms.get('nickname')
+    contraseñaAntigua = request.forms.get('old_Password')
+    contraseñaNueva = request.forms.get('new_Password')
     
-    #Transformacion de contraseña
-    #contraseñaTransformada = ... 
-    #############################
+    doc = c.aggregate([ $match: { '_id': nick },
+                        $project: {'_id':0, 'salt':1}])
+                        
+    if doc is not None:
+        sal = doc['salt']
+    else:
+        return template FailView(info = "Usuario incorrecto")
+
+    password += 'M'
+    dk = hashlib.pbkdf2_hmac('sha256', password, sal, 100000)
+    contraseñaTransformada = binascii.hexlify(dk)
     
     doc = c.aggregate([ $match: { '_id': nick }, 
                         $match: { 'password': contraseñaTransformada } ])
@@ -53,12 +87,20 @@ def change_password():
 
 @post('/login')
 def login():
-    nick = request.forms.get('nick')
-    contraseña = request.forms.get('contraseña')
+    nick = request.forms.get('nickname')
+    contraseña = request.forms.get('password')
     
-    #Transformacion de contraseña
-    #contraseñaTransformada = ... 
-    #############################
+     doc = c.aggregate([ $match: { '_id': nick },
+                        $project: {'_id':0, 'salt':1}])
+                        
+    if doc is not None:
+        sal = doc['salt']
+    else:
+        return template FailView(info = "Usuario incorrecto")
+
+    password += 'M'
+    dk = hashlib.pbkdf2_hmac('sha256', password, sal, 100000)
+    contraseñaTransformada = binascii.hexlify(dk)
     
     doc = c.aggregate([ $match: { '_id': nick }, 
                         $match: { 'password': contraseñaTransformada } ])
