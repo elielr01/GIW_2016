@@ -53,11 +53,15 @@ def signup():
     password2 = request.forms.get('password2')
 
 
-    if c.find({'_id': nickname}).count() > 0:
+    if db.users.find({'_id': nickname}).count() > 0:
             return template('InfoView.tpl', title = "Error", info = "El alias de usuario ya existe")
 
     if password != password2:
         return template('InfoView.tpl', title = "Error", info = "Las contraseñas no coinciden")
+
+    #comprobaciones
+    if (nickname == '' or password == ''):
+        return template('InfoView.tpl', title = "Error", info = "Currate un poco el/la usuario/contraseña ;)")
 
     #insertar en la base de datos según nuestro criterio de almacenamiento
 
@@ -81,7 +85,7 @@ def signup():
             'salt': sal
         })
     #Devolvemos la página web
-    return template('InfoView.tpl', title = "Bienvenido", info = "Bienvenido usuaio " + name)
+    return template('InfoView.tpl', title = "Bienvenido", info = "Bienvenido usuario " + name)
 
 
 
@@ -93,9 +97,9 @@ def change_password():
 
     cur = db.users.find({'_id': nick})
 
-    if cur.count() != 1:
+    if cur.count() != 1 or nick == '' or contrasenaAntigua == '':
         return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos")
-
+    
     #Se verifica que la contraseña antigua sea la correcta
 
     #Se obtiene la sal original del usuario
@@ -169,13 +173,14 @@ def login():
 def gen_secret():
     # >>> gen_secret()
     # '7ZVVBSKR22ATNU26'
-    pass
-
+    GENERATOR = "234567ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    seed = ''.join(random.choice(SAL_GENERATOR) for _ in range(32))
+    return seed[:15]
 
 def gen_gauth_url(app_name, username, secret):
     # >>> gen_gauth_url( 'GIW_grupoX', 'pepe_lopez', 'JBSWY3DPEHPK3PXP')
     # 'otpauth://totp/pepe_lopez?secret=JBSWY3DPEHPK3PXP&issuer=GIW_grupoX
-    pass
+    return 'otpauth://totp/'+username+'?secret='+secret+'&issuer='+app_name
 
 
 def gen_qrcode_url(gauth_url):
@@ -187,12 +192,47 @@ def gen_qrcode_url(gauth_url):
 
 @post('/signup_totp')
 def signup_totp():
-    pass
 
+    nickname = request.forms.get('nickname')
+    name = request.forms.get('name')
+    country = request.forms.get('country')
+    email = request.forms.get('email')
+    password = request.forms.get('password')
+    password2 = request.forms.get('password2')
+
+
+    if db.users.find({'_id': nickname}).count() > 0:
+            return template('InfoView.tpl', title = "Error", info = "El alias de usuario ya existe")
+
+    if password != password2:
+        return template('InfoView.tpl', title = "Error", info = "Las contraseñas no coinciden")
+
+    #comprobaciones
+    if (nickname == '' or password == ''):
+        return template('InfoView.tpl', title = "Error", info = "Currate un poco el/la usuario/contraseña ;)")
+
+    #Falta AQUI todo el tema de totp
+
+
+   #Devolvemos la página web
+    return template('InfoView.tpl', title = "Bienvenido", info = "Bienvenido usuario " + name)
 
 @post('/login_totp')
 def login_totp():
-    pass
+
+    nick = request.forms.get('nickname')
+    contrasena = request.forms.get('password')
+    totp = request.forms.get('totp')
+
+    cur = db.users.find({'_id': nick})
+
+    if cur.count() != 1:
+        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos")
+
+    #Falta aqui todo el tema del totp
+
+   #Devolvemos la página web
+    return template('InfoView.tpl', title = "Bienvenido", info = "Bienvenido " + name)
 
 
 if __name__ == "__main__":
