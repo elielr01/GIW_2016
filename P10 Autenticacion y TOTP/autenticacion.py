@@ -13,7 +13,7 @@
 # Gestion de la Informacion en la Web - 2016-2017
 # Universidad Complutense de Madrid
 # Madrid
-# Aggregation Pipeline
+# Autenticación y TOTP
 
 from bottle import *
 # Resto de importaciones
@@ -23,6 +23,8 @@ import random
 from pymongo import MongoClient
 import onetimepass
 import urllib
+
+##############
 # APARTADO 1 #
 ##############
 
@@ -56,14 +58,14 @@ def signup():
 
 
     if db.users.find({'_id': nickname}).count() > 0:
-            return template('InfoView.tpl', title = "Error", info = "El alias de usuario ya existe")
+            return template('InfoView.tpl', title = "Error", info = "El alias de usuario ya existe", url = ' ')
 
     if password != password2:
-        return template('InfoView.tpl', title = "Error", info = "Las contraseñas no coinciden")
+        return template('InfoView.tpl', title = "Error", info = "Las contraseñas no coinciden", url = ' ')
 
     #comprobaciones
     if (nickname == '' or password == ''):
-        return template('InfoView.tpl', title = "Error", info = "Currate un poco el/la usuario/contraseña ;)")
+        return template('InfoView.tpl', title = "Error", info = "Currate un poco el/la usuario/contraseña", url = ' ')
 
     #insertar en la base de datos según nuestro criterio de almacenamiento
 
@@ -87,7 +89,7 @@ def signup():
             'salt': sal
         })
     #Devolvemos la página web
-    return template('InfoView.tpl', title = "Bienvenido", info = "Bienvenido usuario " + name)
+    return template('InfoView.tpl', title = "Bienvenido", info = "Bienvenido usuario " + name, url = ' ')
 
 
 
@@ -100,7 +102,7 @@ def change_password():
     cur = db.users.find({'_id': nick})
 
     if cur.count() != 1 or nick == '' or contrasenaAntigua == '':
-        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos")
+        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos", url = ' ')
     
     #Se verifica que la contraseña antigua sea la correcta
 
@@ -116,7 +118,7 @@ def change_password():
     contrasenaAntiguaTransformada = binascii.hexlify(dk)
 
     if contrasenaAntiguaTransformada != doc['password']:
-        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos")
+        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos", url = ' ')
 
     #Si el alias existe y la contraseña es correcta, entonces se cambia la contraseña.
     #Se crea una sal
@@ -134,7 +136,7 @@ def change_password():
 
     #Devolvemos la página web
     return template('InfoView.tpl', title = "Cambio de contraseña exitoso",
-                    info = "La contraseña del usuario " + nick + " ha sido modificada")
+                    info = "La contraseña del usuario " + nick + " ha sido modificada", url = ' ')
 
 @post('/login')
 def login():
@@ -144,7 +146,7 @@ def login():
     cur = db.users.find({'_id': nick})
 
     if cur.count() != 1:
-        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos")
+        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos", url = ' ')
 
     #Se verifica que la contraseña sea la correcta
 
@@ -161,10 +163,10 @@ def login():
     contrasena = binascii.hexlify(dk)
 
     if contrasena != doc['password']:
-        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos")
+        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos", url =  ' ')
 
     #Devolvemos la página web
-    return template('InfoView.tpl', title = "Bienvenido", info = "Bienvenido " + name)
+    return template('InfoView.tpl', title = "Bienvenido", info = "Bienvenido " + name, url = ' ')
 
 
 ##############
@@ -241,7 +243,7 @@ def login_totp():
 
     #Comprobaciones
     if cur.count() != 1:
-        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos")
+        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos", url=' ')
     
     for doc in cur:
         semilla = str(doc['seed'])
@@ -249,15 +251,15 @@ def login_totp():
         contrasenaBD = doc['password']
         
     if contrasena != contrasenaBD:
-        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos")
+        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos", url = ' ')
 
     #TOTP
     totpBD = get_totp(oontrasenaBD)
     if totp != totpBD:
-        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos")
+        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos", url = ' ')
        
     #Devolvemos la página web
-    return template('InfoView.tpl', title = "Bienvenido", info = "Bienvenido " + name)
+    return template('InfoView.tpl', title = "Bienvenido", info = "Bienvenido " + name, url = ' ')
 
 
 if __name__ == "__main__":
