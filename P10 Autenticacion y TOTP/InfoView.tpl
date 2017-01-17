@@ -9,5 +9,8 @@
   <header>
     <h2> {{info}}</h2>
   </header>
+ %if url == '':
+	<p>{{url}}</p>
+	
 </body>
 </html>

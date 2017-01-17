@@ -21,6 +21,8 @@ import hashlib
 import binascii
 import random
 from pymongo import MongoClient
+import onetimepass
+import urllib
 # APARTADO 1 #
 ##############
 
@@ -186,7 +188,7 @@ def gen_gauth_url(app_name, username, secret):
 def gen_qrcode_url(gauth_url):
     # >>> gen_qrcode_url('otpauth://totp/pepe_lopez?secret=JBSWY3DPEHPK3PXP&issuer=GIW_grupoX')
     # 'http://api.qrserver.com/v1/create-qr-code/?data=otpauth%3A%2F%2Ftotp%2Fpepe_lopez%3Fsecret%3DJBSWY3DPEHPK3PXP%26issuer%3DGIW_grupoX'
-    pass
+    return urllib.urlopen('http://api.qrserver.com/v1/create-qr-code/?data='+gauth_url).read()
 
 
 
@@ -201,21 +203,32 @@ def signup_totp():
     password2 = request.forms.get('password2')
 
 
-    if db.users.find({'_id': nickname}).count() > 0:
-            return template('InfoView.tpl', title = "Error", info = "El alias de usuario ya existe")
+    if c.find({'_id': nickname}).count() > 0:
+            return template('InfoView.tpl', title = "Error", info = "El alias de usuario ya existe",url='')
 
     if password != password2:
-        return template('InfoView.tpl', title = "Error", info = "Las contraseñas no coinciden")
+        return template('InfoView.tpl', title = "Error", info = "Las contraseñas no coinciden",url='')
 
     #comprobaciones
     if (nickname == '' or password == ''):
-        return template('InfoView.tpl', title = "Error", info = "Currate un poco el/la usuario/contraseña ;)")
+        return template('InfoView.tpl', title = "Error", info = "Escribe un nick/contraseña más seguro",url='')
 
-    #Falta AQUI todo el tema de totp
+    #TOTP
+    semilla = gen_secret()
+    gauth = gen_gauth_url('GIW_grupo6', nickname, semilla)
+    result = db.users.insert_one(
+        {
+            '_id': nickname,
+            'name': name,
+            'country': country,
+            'email': email,
+            'password': password,
+            'seed': semilla
+        })
+    codigoQR = gen_qrcode_url(gauth)
 
-
-   #Devolvemos la página web
-    return template('InfoView.tpl', title = "Bienvenido", info = "Bienvenido usuario " + name)
+    #Devolvemos la página web
+    return template('InfoView.tpl', title = "Bienvenido", info = "Bienvenido usuario "+ name + '\n'+'\n' + " Su semilla: "+ semilla, url=codigoQR)
 
 @post('/login_totp')
 def login_totp():
@@ -226,12 +239,24 @@ def login_totp():
 
     cur = db.users.find({'_id': nick})
 
+    #Comprobaciones
     if cur.count() != 1:
         return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos")
+    
+    for doc in cur:
+        semilla = str(doc['seed'])
+        name = doc['name']
+        contrasenaBD = doc['password']
+        
+    if contrasena != contrasenaBD:
+        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos")
 
-    #Falta aqui todo el tema del totp
-
-   #Devolvemos la página web
+    #TOTP
+    totpBD = get_totp(oontrasenaBD)
+    if totp != totpBD:
+        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos")
+       
+    #Devolvemos la página web
     return template('InfoView.tpl', title = "Bienvenido", info = "Bienvenido " + name)
 
 
