@@ -49,14 +49,15 @@ Pasos para probarlo (By Lorenzo jeje):
 '''
 STATE = hashlib.sha256(os.urandom(1024)).hexdigest()
 
+URL = urllib.urlopen(DISCOVERY_DOC).read()
+JSONURL = json.loads(str(URL))
+
 #Creo que la función está ya hecha
 @get('/login_google')
 def login_google():
-    jsonurl = urllib.urlopen(DISCOVERY_DOC).read()
-    urlj = json.loads(str(jsonurl))
-    tipo = 'email'
 
-    url = urlj['authorization_endpoint']+'?client_id='+CLIENT_ID+'&response_type=code&scope='+urllib.quote('openid ', safe = '')+tipo+'&redirect_uri='+REDIRECT_URI+'&state='+STATE
+    tipo = 'email'
+    url = JSONURL['authorization_endpoint']+'?client_id='+CLIENT_ID+'&response_type=code&scope='+urllib.quote('openid ', safe = '')+tipo+'&redirect_uri='+REDIRECT_URI+'&state='+STATE
 
     return template('loginGoogle.tpl',url = url)
 
@@ -66,17 +67,13 @@ def token():
     #Obtengo el código temporal
     codigo = request.query.code
 
-    #Obtengo el json 
-    jsonurl = urllib.urlopen(DISCOVERY_DOC).read()
-    urlj = json.loads(str(jsonurl))
-
     #Comprobamos que el state
     if(request.query.state != STATE):
         return template('FailView.tpl')
 
     #envio un POST a google y me lo devuelve como json
     data = urllib.urlencode({'code':codigo,'client_id':CLIENT_ID,'client_secret':CLIENT_SECRET,'redirect_uri':REDIRECT_URI,'grant_type':'authorization_code'})
-    urlPedirToken = urllib.urlopen(urlj['token_endpoint'],data).read()
+    urlPedirToken = urllib.urlopen(JSONURL['token_endpoint'],data).read()
     jsonToken = json.loads(str(urlPedirToken))
     
     #Falta aqui descifrar la contrasena y el usuario
