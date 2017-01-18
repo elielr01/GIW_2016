@@ -58,14 +58,14 @@ def signup():
 
 
     if db.users.find({'_id': nickname}).count() > 0:
-            return template('InfoView.tpl', title = "Error", info = "El alias de usuario ya existe", url = ' ')
+            return template('InfoView.tpl', title = "Error", info = "El alias de usuario ya existe")
 
     if password != password2:
-        return template('InfoView.tpl', title = "Error", info = "Las contraseñas no coinciden", url = ' ')
+        return template('InfoView.tpl', title = "Error", info = "Las contraseñas no coinciden")
 
     #comprobaciones
     if (nickname == '' or password == ''):
-        return template('InfoView.tpl', title = "Error", info = "Currate un poco el/la usuario/contraseña", url = ' ')
+        return template('InfoView.tpl', title = "Error", info = "Currate un poco el/la usuario/contraseña")
 
     #insertar en la base de datos según nuestro criterio de almacenamiento
 
@@ -89,7 +89,7 @@ def signup():
             'salt': sal
         })
     #Devolvemos la página web
-    return template('InfoView.tpl', title = "Bienvenido", info = "Bienvenido usuario " + name, url = ' ')
+    return template('InfoView.tpl', title = "Bienvenido", info = "Bienvenido " + name)
 
 
 
@@ -102,13 +102,14 @@ def change_password():
     cur = db.users.find({'_id': nick})
 
     if cur.count() != 1 or nick == '' or contrasenaAntigua == '':
-        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos", url = ' ')
-    
+        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos")
+
     #Se verifica que la contraseña antigua sea la correcta
 
     #Se obtiene la sal original del usuario
     for doc in cur:
         salUsuario = str(doc['salt'])
+        contrasenaBD = doc['password']
 
     #Se agrega la pimienta
     contrasenaAntigua += PIMIENTA
@@ -117,8 +118,8 @@ def change_password():
     dk = hashlib.pbkdf2_hmac('sha256', contrasenaAntigua, salUsuario, ITERACIONES_HASH)
     contrasenaAntiguaTransformada = binascii.hexlify(dk)
 
-    if contrasenaAntiguaTransformada != doc['password']:
-        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos", url = ' ')
+    if contrasenaAntiguaTransformada != contrasenaBD:
+        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos")
 
     #Si el alias existe y la contraseña es correcta, entonces se cambia la contraseña.
     #Se crea una sal
@@ -136,7 +137,7 @@ def change_password():
 
     #Devolvemos la página web
     return template('InfoView.tpl', title = "Cambio de contraseña exitoso",
-                    info = "La contraseña del usuario " + nick + " ha sido modificada", url = ' ')
+                    info = "La contraseña del usuario " + nick + " ha sido modificada")
 
 @post('/login')
 def login():
@@ -146,7 +147,7 @@ def login():
     cur = db.users.find({'_id': nick})
 
     if cur.count() != 1:
-        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos", url = ' ')
+        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos")
 
     #Se verifica que la contraseña sea la correcta
 
@@ -154,6 +155,7 @@ def login():
     for doc in cur:
         sal = str(doc['salt'])
         name = doc['name']
+        contrasenaBD = doc['password']
 
     #Se agrega la pimienta
     contrasena += PIMIENTA
@@ -162,11 +164,11 @@ def login():
     dk = hashlib.pbkdf2_hmac('sha256', contrasena, sal, ITERACIONES_HASH)
     contrasena = binascii.hexlify(dk)
 
-    if contrasena != doc['password']:
-        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos", url =  ' ')
+    if contrasena != contrasenaBD:
+        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos")
 
     #Devolvemos la página web
-    return template('InfoView.tpl', title = "Bienvenido", info = "Bienvenido " + name, url = ' ')
+    return template('InfoView.tpl', title = "Bienvenido", info = "Bienvenido " + name)
 
 
 ##############
@@ -178,8 +180,7 @@ def gen_secret():
     # >>> gen_secret()
     # '7ZVVBSKR22ATNU26'
     GENERATOR = "234567ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    seed = ''.join(random.choice(SAL_GENERATOR) for _ in range(32))
-    return seed[:15]
+    return ''.join(random.choice(GENERATOR) for _ in range(16))
 
 def gen_gauth_url(app_name, username, secret):
     # >>> gen_gauth_url( 'GIW_grupoX', 'pepe_lopez', 'JBSWY3DPEHPK3PXP')
@@ -190,7 +191,7 @@ def gen_gauth_url(app_name, username, secret):
 def gen_qrcode_url(gauth_url):
     # >>> gen_qrcode_url('otpauth://totp/pepe_lopez?secret=JBSWY3DPEHPK3PXP&issuer=GIW_grupoX')
     # 'http://api.qrserver.com/v1/create-qr-code/?data=otpauth%3A%2F%2Ftotp%2Fpepe_lopez%3Fsecret%3DJBSWY3DPEHPK3PXP%26issuer%3DGIW_grupoX'
-    return urllib.urlopen('http://api.qrserver.com/v1/create-qr-code/?data='+gauth_url).read()
+    return 'http://api.qrserver.com/v1/create-qr-code/?data=' + urllib.quote(gauth_url, safe = '')
 
 
 
@@ -206,18 +207,29 @@ def signup_totp():
 
 
     if c.find({'_id': nickname}).count() > 0:
-            return template('InfoView.tpl', title = "Error", info = "El alias de usuario ya existe",url='')
+            return template('InfoView.tpl', title = "Error", info = "El alias de usuario ya existe")
 
     if password != password2:
-        return template('InfoView.tpl', title = "Error", info = "Las contraseñas no coinciden",url='')
+        return template('InfoView.tpl', title = "Error", info = "Las contraseñas no coinciden")
 
     #comprobaciones
     if (nickname == '' or password == ''):
-        return template('InfoView.tpl', title = "Error", info = "Escribe un nick/contraseña más seguro",url='')
+        return template('InfoView.tpl', title = "Error", info = "Escribe un nick/contraseña más seguro")
+
+    #insertar en la base de datos según nuestro criterio de almacenamiento
+
+    #Se crea una sal
+    sal = ''.join(random.choice(SAL_GENERATOR) for _ in range(64))
+
+    #Se le agrega la pimienta
+    password += PIMIENTA
+
+    #Se aplica función hash
+    dk = hashlib.pbkdf2_hmac('sha256', password, sal, ITERACIONES_HASH)
+    password = binascii.hexlify(dk)
 
     #TOTP
     semilla = gen_secret()
-    gauth = gen_gauth_url('GIW_grupo6', nickname, semilla)
     result = db.users.insert_one(
         {
             '_id': nickname,
@@ -225,12 +237,16 @@ def signup_totp():
             'country': country,
             'email': email,
             'password': password,
+            'salt': sal,
             'seed': semilla
         })
+
+    gauth = gen_gauth_url('GIW_grupo6', nickname, semilla)
     codigoQR = gen_qrcode_url(gauth)
 
     #Devolvemos la página web
-    return template('InfoView.tpl', title = "Bienvenido", info = "Bienvenido usuario "+ name + '\n'+'\n' + " Su semilla: "+ semilla, url=codigoQR)
+    return template('InfoView_TOTP.tpl', title = "Bienvenido", info = "Bienvenido " + name + ".",
+                    semilla = "Su semilla: " + semilla, url = codigoQR)
 
 @post('/login_totp')
 def login_totp():
@@ -239,27 +255,38 @@ def login_totp():
     contrasena = request.forms.get('password')
     totp = request.forms.get('totp')
 
-    cur = db.users.find({'_id': nick})
-
     #Comprobaciones
+    cur = db.users.find({'_id': nick})
+    #Se verifica que el alias exista
     if cur.count() != 1:
-        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos", url=' ')
-    
+        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos")
+
+    #Si existe, se extraen sus datos para procesar
     for doc in cur:
-        semilla = str(doc['seed'])
+        sal = str(doc['salt'])
+        semilla = doc['seed']
         name = doc['name']
         contrasenaBD = doc['password']
-        
-    if contrasena != contrasenaBD:
-        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos", url = ' ')
 
-    #TOTP
-    totpBD = get_totp(oontrasenaBD)
-    if totp != totpBD:
-        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos", url = ' ')
-       
+    #Se verifica que la contraseña sea la correcta
+
+    #Se agrega la pimienta
+    contrasena += PIMIENTA
+
+    #Se aplica la función hash
+    dk = hashlib.pbkdf2_hmac('sha256', contrasena, sal, ITERACIONES_HASH)
+    contrasena = binascii.hexlify(dk)
+
+    if contrasena != contrasenaBD:
+        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos")
+
+    #Se verifica el TOTP
+    valid_totp = onetimepass.valid_totp(token = totp, secret = semilla)
+    if not valid_totp:
+        return template('InfoView.tpl', title = "Error", info = "Usuario o contraseña incorrectos")
+
     #Devolvemos la página web
-    return template('InfoView.tpl', title = "Bienvenido", info = "Bienvenido " + name, url = ' ')
+    return template('InfoView.tpl', title = "Bienvenido", info = "Bienvenido " + name + ".")
 
 
 if __name__ == "__main__":

@@ -7,6 +7,8 @@
 
 <body>
   <p>{{info}}</p>
-</body>
+  <p>{{semilla}}</p>
+  <img src={{url}} alt="" title="" />
 
+</body>
 </html>
