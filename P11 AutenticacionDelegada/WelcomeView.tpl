@@ -7,7 +7,7 @@
 
 <body>
   <header>
-    <h2> Bienvenido {{e-mail}}</h2>
+    <h2> Bienvenido {{email}}</h2>
   </header>
 </body>
 </html>
