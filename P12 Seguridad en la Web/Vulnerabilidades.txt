@@ -1,0 +1,8 @@
+XSS Reflejada 	Metiendo <META HTTP-EQUIV="REFRESH" CONTENT="5;URL=http://www.desarrolloweb.com">
+		en la barra del buscador podemos usar el buscador para que a las 5 segundos
+		se redirija a la pagina que queramos. Puede usarse para atacar otra páginas
+		web mediante SQL Inyection usando la redirección.
+
+SQL Inyection   El caso más típico de SQL Inyection (' or '1'='1'--) funciona con el buscador de 
+		etiquetas. Este comando expondría muchisimos datos que auqnue en este caso son 
+		públicos, podrían ser de carácter privado.
