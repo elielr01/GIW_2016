@@ -3,6 +3,11 @@ XSS Reflejada 	Metiendo <META HTTP-EQUIV="REFRESH" CONTENT="5;URL=http://www.des
 		se redirija a la pagina que queramos. Puede usarse para atacar otra páginas
 		web mediante SQL Inyection usando la redirección.
 
-SQL Inyection   El caso más típico de SQL Inyection (' or '1'='1'--) funciona con el buscador de 
+SQL Inyection-1   El caso más típico de SQL Inyection (' or '1'='1'--) funciona con el buscador de 
 		etiquetas. Este comando expondría muchisimos datos que auqnue en este caso son 
 		públicos, podrían ser de carácter privado.
+		Vulnerabilidad usando: http://localhost:8080/search_question?tag=%27%20or%20%27a%27=%27a
+
+SQL Inyection-1 Vulnerabilidad SQL Inyection a la hora de insertar una pregunta colocando
+		en el body: body','l'); drop table Questions;--
+		Destruimos la tabla jajaja
