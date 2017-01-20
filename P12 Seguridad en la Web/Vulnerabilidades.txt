@@ -12,7 +12,7 @@ SQL Inyection-1 Vulnerabilidad SQL Inyection a la hora de insertar una pregunta 
 		en el body: body','l'); drop table Questions;--
 		Destruimos la tabla jajaja
 
-XSS Persistente a través de SQL Inyection. Usando la vulnerabilidad anterior podemos realizar una inyección de código
+XSS Persistente embebido en un SQL Inyection. Usando la vulnerabilidad anterior podemos realizar una inyección de código
 		SQL que realice un ataque XSS Persistente en la base de datos. Un ejemplo puede ser:
 		body','l'); UPDATE questions SET body = "<script>alert('Hacked')</script>";--
 		Este código modifica el campo body de la pregunta de ana con un código javascript que muestra un mensaje al 
