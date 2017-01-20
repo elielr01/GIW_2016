@@ -57,7 +57,7 @@ JSONURL = json.loads(str(URL))
 def login_google():
 
     tipo = 'email'
-    url = JSONURL['authorization_endpoint']+'?client_id='+CLIENT_ID+'&response_type=code&scope='+urllib.quote('openid ', safe = '')+tipo+'&redirect_uri='+REDIRECT_URI+'&state='+STATE
+    url = JSONURL['authorization_endpoint']+'?client_id='+CLIENT_ID+'&response_type=code&scope='+urllib.quote('openid ', safe = '')+tipo+'&redirect_uri='+REDIRECT_URI+'&state='+hashlib.sha256(os.urandom(1024)).hexdigest())
 
     return template('loginGoogle.tpl',url = url)
 
