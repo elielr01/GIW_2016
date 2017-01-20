@@ -1,13 +1,19 @@
 XSS Reflejada 	Metiendo <META HTTP-EQUIV="REFRESH" CONTENT="5;URL=http://www.desarrolloweb.com">
 		en la barra del buscador podemos usar el buscador para que a las 5 segundos
-		se redirija a la pagina que queramos. Puede usarse para atacar otra p醙inas
-		web mediante SQL Inyection usando la redirecci髇.
+		se redirija a la pagina que queramos. Puede usarse para atacar otra p谩ginas
+		web mediante SQL Inyection usando la redirecci贸n.
 
-SQL Inyection-1   El caso m醩 t韕ico de SQL Inyection (' or '1'='1'--) funciona con el buscador de 
-		etiquetas. Este comando expondr韆 muchisimos datos que auqnue en este caso son 
-		p鷅licos, podr韆n ser de car醕ter privado.
+SQL Inyection-1   El caso m谩s t铆pico de SQL Inyection (' or '1'='1'--) funciona con el buscador de 
+		etiquetas. Este comando expondr铆a muchisimos datos que auqnue en este caso son 
+		p煤blicos, podr铆an ser de car谩cter privado.
 		Vulnerabilidad usando: http://localhost:8080/search_question?tag=%27%20or%20%27a%27=%27a
 
 SQL Inyection-1 Vulnerabilidad SQL Inyection a la hora de insertar una pregunta colocando
 		en el body: body','l'); drop table Questions;--
 		Destruimos la tabla jajaja
+
+XSS Persistente a trav茅s de SQL Inyection. Usando la vulnerabilidad anterior podemos realizar una inyecci贸n de c贸digo
+		SQL que realice un ataque XSS Persistente en la base de datos. Un ejemplo puede ser:
+		body','l'); UPDATE questions SET body = "<script>alert('Hacked')</script>";--
+		Este c贸digo modifica el campo body de la pregunta de ana con un c贸digo javascript que muestra un mensaje al 
+		abrir dicha pregunta.
