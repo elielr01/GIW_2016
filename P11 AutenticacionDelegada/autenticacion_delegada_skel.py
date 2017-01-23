@@ -22,10 +22,9 @@ import json
 import hashlib
 import random
 import os
-import bottle_session
-import bottle_redis
 import bottle
-import redis
+
+from beaker.middleware import SessionMiddleware
 
 # Credenciales.
 # https://developers.google.com/identity/protocols/OpenIDConnect#appsetup
@@ -44,41 +43,34 @@ DISCOVERY_DOC = "https://accounts.google.com/.well-known/openid-configuration"
 # https://developers.google.com/identity/protocols/OpenIDConnect#validatinganidtoken
 TOKEN_VALIDATION_ENDPOINT = "https://www.googleapis.com/oauth2/v4/token"
 
-#SESSIONS = dict()
-
 URL = urllib.urlopen(DISCOVERY_DOC).read()
 JSONURL = json.loads(str(URL))
 
 #Creo que la función está ya hecha
 @get('/login_google')
-def login_google(session):
+def login_google():
 
-    #global SESSIONS
-    print session, type(session)
-    print session['state'], type(session['state'])
-    if session['state'] is None:
-        state = hashlib.sha256(os.urandom(1024)).hexdigest()
-        session['state'] = state
-    #SESSIONS[state] = state
+    session = bottle.request.environ.get('beaker.session')
+    session['state'] = hashlib.sha256(os.urandom(1024)).hexdigest()
+    session.save()
 
     tipo = 'email'
     url = (JSONURL['authorization_endpoint'] + '?client_id=' + CLIENT_ID + '&response_type=code&scope=' +
         urllib.quote('openid ', safe = '')+ tipo + '&redirect_uri=' + REDIRECT_URI + '&state=' +
         session['state'])
-        #SESSIONS[state])
 
     return template('loginGoogle.tpl',url = url)
 
 @get('/token')
-def token(session):
-
-    #global SESSIONS
+def token():
 
     #Obtengo el código temporal
     codigo = request.query.code
 
+    session = bottle.request.environ.get('beaker.session')
+
     #Comprobamos que el state
-    if(request.query.state != session['state']):#SESSIONS[request.query.state]):
+    if(request.query.state !=  session['state']):
         return template('FailView.tpl')
 
     #envio un POST a google y me lo devuelve como json
@@ -104,19 +96,13 @@ def token(session):
 
 if __name__ == "__main__":
 
-    app = bottle.app()
-    session_plugin = bottle_session.SessionPlugin()
-    redis_plugin = bottle_redis.RedisPlugin()
-
-    connection_pool = redis.ConnectionPool(host='localhost', port=6379)
-
-    session_plugin.connection_pool = connection_pool
-    redis_plugin.redisdb = connection_pool
-    app.install(session_plugin)
-    app.install(redis_plugin)
+    session_opts = {
+        'session.type': 'file',
+        'session.cookie_expires': 300,
+        'session.data_dir': './data',
+        'session.auto': True
+    }
+    app = SessionMiddleware(bottle.app(), session_opts)
 
     # NO MODIFICAR LOS PARÁMETROS DE run()
-    run(host='localhost',port=8080,debug=True)
-
-
-    #print SESSIONS
+    run(app=app, host='localhost',port=8080,debug=True)
