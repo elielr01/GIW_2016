@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <title>Log in</title>
+  <title>Error</title>
   <meta charset="utf-8" />
 </head>
 
 <body>
-  <h1>Log In</h1>
-  <p><a href={{url}}>Redirection to Google</a></p>
+  <header>
+    <h2> Error: State paramater not valid</h2>
+  </header>
 </body>
 </html>
