@@ -22,6 +22,10 @@ import json
 import hashlib
 import random
 import os
+import bottle_session
+import bottle_redis
+import bottle
+import redis
 
 # Credenciales.
 # https://developers.google.com/identity/protocols/OpenIDConnect#appsetup
@@ -40,36 +44,41 @@ DISCOVERY_DOC = "https://accounts.google.com/.well-known/openid-configuration"
 # https://developers.google.com/identity/protocols/OpenIDConnect#validatinganidtoken
 TOKEN_VALIDATION_ENDPOINT = "https://www.googleapis.com/oauth2/v4/token"
 
-SESSIONS = dict()
+#SESSIONS = dict()
 
 URL = urllib.urlopen(DISCOVERY_DOC).read()
 JSONURL = json.loads(str(URL))
 
 #Creo que la función está ya hecha
 @get('/login_google')
-def login_google():
+def login_google(session):
 
-    global SESSIONS
-    state = hashlib.sha256(os.urandom(1024)).hexdigest()
-    SESSIONS[state] = state
+    #global SESSIONS
+    print session, type(session)
+    print session['state'], type(session['state'])
+    if session['state'] is None:
+        state = hashlib.sha256(os.urandom(1024)).hexdigest()
+        session['state'] = state
+    #SESSIONS[state] = state
 
     tipo = 'email'
     url = (JSONURL['authorization_endpoint'] + '?client_id=' + CLIENT_ID + '&response_type=code&scope=' +
         urllib.quote('openid ', safe = '')+ tipo + '&redirect_uri=' + REDIRECT_URI + '&state=' +
-        SESSIONS[state])
+        session['state'])
+        #SESSIONS[state])
 
     return template('loginGoogle.tpl',url = url)
 
 @get('/token')
-def token():
+def token(session):
 
-    global SESSIONS
+    #global SESSIONS
 
     #Obtengo el código temporal
     codigo = request.query.code
 
     #Comprobamos que el state
-    if(request.query.state != SESSIONS[request.query.state]):
+    if(request.query.state != session['state']):#SESSIONS[request.query.state]):
         return template('FailView.tpl')
 
     #envio un POST a google y me lo devuelve como json
@@ -88,13 +97,26 @@ def token():
     #Obtenemos el email
     mail = jsonToken['email']
 
-    del SESSIONS[request.query.state]
+    #del SESSIONS[request.query.state]
     #Devolvemos la página web de bienvenida
     return template('WelcomeView.tpl',email=mail)
 
 
 if __name__ == "__main__":
+
+    app = bottle.app()
+    session_plugin = bottle_session.SessionPlugin()
+    redis_plugin = bottle_redis.RedisPlugin()
+
+    connection_pool = redis.ConnectionPool(host='localhost', port=6379)
+
+    session_plugin.connection_pool = connection_pool
+    redis_plugin.redisdb = connection_pool
+    app.install(session_plugin)
+    app.install(redis_plugin)
+
     # NO MODIFICAR LOS PARÁMETROS DE run()
     run(host='localhost',port=8080,debug=True)
 
-    print SESSIONS
+
+    #print SESSIONS
